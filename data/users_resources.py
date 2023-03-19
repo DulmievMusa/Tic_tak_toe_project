@@ -37,6 +37,7 @@ class UserResource(Resource):
         user.country = args['country']
         user.email = args['email']
         user.image_name = args['image_name']
+        user.set_password(args['password'])
         session.commit()
         return jsonify({'success': 'OK'})
 
@@ -57,6 +58,7 @@ class UserListResource(Resource):
             email=args['email'],
         )
         session.add(user)
+        user.image_name = user.email
         user.set_password(args['password'])
         session.commit()
         return jsonify({'success': 'OK'})
