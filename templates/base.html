@@ -13,7 +13,7 @@
 <body>
     <nav class="navbar navbar-light bg-light">
         <H1>Tic Tac Toe</H1>
-        {% if current_user %}
+        {% if current_user.is_authenticated %}
             <p>
                 <a class="btn btn-primary " href="/addjob">Add job</a>
             </p>
@@ -21,7 +21,7 @@
         {% else %}
             <p>
                 <a class="btn btn-primary " href="/register">Register</a>
-                <a class="btn btn-success" href="/login">Login</a>
+                <a class="btn btn-success" href="/login">Sign in</a>
             </p>
         {% endif %}
         <a class="navbar-brand" href="/">MDulmiev</a>
