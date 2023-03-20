@@ -1,6 +1,6 @@
 import random
 from requests import get, post, delete, put
-from flask import Flask, render_template, redirect, url_for, request, abort, make_response, jsonify
+from flask import Flask, render_template, redirect, url_for, request, abort, make_response, jsonify, session
 from data import db_session
 from flask_restful import reqparse, abort, Api, Resource
 from data.users import User
@@ -9,6 +9,7 @@ from funcs.user_funcs import *
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from waitress import serve
 db_session.global_init("db/main.db")
 
 app = Flask(__name__)
@@ -28,6 +29,14 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
+@app.route("/session_test")
+def session_test():
+    loading_count = session.get('loading_count', 0)
+    session['loading_count'] = loading_count + 1
+    return make_response(
+        f"Вы пришли на эту страницу {loading_count + 1} раз")
+
+
 @app.route('/test_reload')
 def test_reload():
     return render_template('auto-reload_test.html', num=random.random(), need=True)
@@ -40,7 +49,12 @@ def index():
 
 @app.route('/game_search')
 def game_search():
-    return render_template('game_search_page.html', current_user=current_user)
+    loading_count = session.get('loading_count', 0)
+    if loading_count + 1 == 9:
+        loading_count = 0
+    session['loading_count'] = loading_count + 1
+    return render_template('game_search_page.html',
+                           link=url_for('static', filename=f'images/loading_sprites/loading_{loading_count + 1}.gif'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -89,6 +103,7 @@ def logout():
 
 def main():
     app.run()
+    # serve(app, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
