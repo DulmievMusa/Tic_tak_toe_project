@@ -35,7 +35,12 @@ def test_reload():
 
 @app.route('/')
 def index():
-    return render_template('base.html', current_user=current_user)
+    return render_template('main_page.html', current_user=current_user)
+
+
+@app.route('/game_search')
+def game_search():
+    return render_template('game_search_page.html', current_user=current_user)
 
 
 @app.route('/register', methods=['GET', 'POST'])
