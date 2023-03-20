@@ -6,13 +6,14 @@ from flask_restful import reqparse, abort, Api, Resource
 from data.users import User
 from data import users_resources
 from forms.register_form import RegisterForm
+from flask_login import LoginManager
 db_session.global_init("db/main.db")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my_tic_tac_toe_key'
 api = Api(app)
-api.add_resource(users_resources.UserListResource, '/api/users')
-api.add_resource(users_resources.UserResource, '/api/user/<int:user_id>')
+# api.add_resource(users_resources.UserListResource, '/api/users')
+# api.add_resource(users_resources.UserResource, '/api/user/<int:user_id>')
 
 
 @app.route('/test_reload')
