@@ -4,7 +4,8 @@ from flask import Flask, render_template, redirect, url_for, request, abort, mak
 from data import db_session
 from flask_restful import reqparse, abort, Api, Resource
 from data.users import User
-from data import users_resources
+from funcs.user_funcs import *
+# from data import users_resources
 from forms.register_form import RegisterForm
 from flask_login import LoginManager
 db_session.global_init("db/main.db")
@@ -38,14 +39,12 @@ def register():
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register_form.html', title='Registration',
                                    form=form, message="This user already exists")
-        post('http://127.0.0.1:5000/api/users',
-             json={
+        add_user({
                  'name': form.name.data,
                  'rating': 0,
                  'country': form.country.data,
                  'email': form.email.data,
-                 'password': form.password.data
-             })
+                 'password': form.password.data})
         return redirect('/')
     return render_template('register_form.html', title='Registration', form=form)
 
