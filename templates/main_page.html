@@ -2,5 +2,12 @@
 
 {% block content %}
     <h1>Main page</h1>
+    {% if current_user.is_authenticated %}
     <a class="btn btn-primary " href="/game_search">Play</a>
+    {% else %}
+    <p>
+        <a class="btn btn-primary " href="/register">Register</a>
+        <a class="btn btn-success" href="/login">Sign in</a>
+    </p>
+    {% endif %}
 {% endblock %}

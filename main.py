@@ -5,6 +5,7 @@ from data import db_session
 from flask_restful import reqparse, abort, Api, Resource
 from data.users import User
 from funcs.user_funcs import *
+from funcs.game_funcs import *
 # from data import users_resources
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
@@ -48,11 +49,16 @@ def index():
 
 
 @app.route('/game_search')
+@login_required
 def game_search():
     loading_count = session.get('loading_count', 0)
     if loading_count + 1 == 9:
         loading_count = 0
     session['loading_count'] = loading_count + 1
+    if not is_user_in_game(current_user.id):
+        create_game(current_user.id)
+    session['playing'] = True
+
     return render_template('game_search_page.html',
                            link=url_for('static', filename=f'images/loading_sprites/loading_{loading_count + 1}.gif'))
 
@@ -87,6 +93,7 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
+            session['playing'] = False
             return redirect("/")
         return render_template('login.html',
                                message="Incorrect login or password",
@@ -97,6 +104,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    session['playing'] = False
     logout_user()
     return redirect("/")
 

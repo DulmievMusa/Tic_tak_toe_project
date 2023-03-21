@@ -1,5 +1,6 @@
 from data import db_session
 from data.users import User
+from data.games import Game
 
 
 def is_user_found(user_id):
@@ -8,6 +9,15 @@ def is_user_found(user_id):
     if not user:
         return False
     return True
+
+
+def is_user_in_game(user_id):
+    session = db_session.create_session()
+    games = session.query(Game).all()
+    for game in games:
+        if str(user_id) in game.players_ids.split():
+            return True
+    return False
 
 
 def get_user(user_id):
@@ -32,13 +42,13 @@ def edit_user(user_id, args):
     if not is_user_found(user_id):
         return {'error': 404}
     session = db_session.create_session()
-    user = session.query(User).filter(User.id == user_id).first()
-    user.name = args['name']
-    user.rating = args['rating']
-    user.country = args['country']
-    user.email = args['email']
-    user.image_name = args['image_name']
-    user.set_password(args['password'])
+    user = session.query(User).get(user_id)
+    user.name = args.get('name', user.name)
+    user.rating = args.get('rating', user.rating)
+    user.country = args.get('country', user.country)
+    user.email = args.get('email', user.email)
+    user.image_name = args.get('image_name', user.image_name)
+    user.set_password(args.get('password', user.hashed_password))
     session.commit()
     return {'success': 'OK'}
 
