@@ -27,7 +27,9 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    user = db_sess.query(User).get(user_id)
+    db_sess.close()
+    return user
 
 
 @app.route("/session_test")
@@ -55,8 +57,16 @@ def game_search():
     if loading_count + 1 == 9:
         loading_count = 0
     session['loading_count'] = loading_count + 1
-    if not is_user_in_game(current_user.id) and get_free_game_id() is None:
+    if not is_user_in_game(current_user.id) and get_free_game_id() is None \
+            and get_game_where_user_play(current_user.id) is None:
         create_game(current_user.id)
+        new_game_id = get_game_where_user_play(current_user.id)
+        session['game_id'] = new_game_id
+    else:
+        if not is_user_in_game(current_user.id):
+            free_game_id = get_free_game_id()
+            session['game_id'] = free_game_id
+            add_user_id_to_game(free_game_id, current_user.id)
     session['playing'] = True
     return render_template('game_search_page.html',
                            link=url_for('static', filename=f'images/loading_sprites/loading_{loading_count + 1}.gif'))
@@ -72,8 +82,10 @@ def register():
 
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
+            db_sess.close()
             return render_template('register_form.html', title='Registration',
                                    form=form, message="This user already exists")
+        db_sess.close()
         add_user({
                  'name': form.name.data,
                  'rating': 0,
@@ -90,9 +102,11 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
+        db_sess.close()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             session['playing'] = False
+            session['game_id'] = None
             return redirect("/")
         return render_template('login.html',
                                message="Incorrect login or password",
@@ -103,7 +117,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    session['playing'] = False
+    session.clear()
     logout_user()
     return redirect("/")
 

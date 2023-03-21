@@ -5,6 +5,7 @@ from data.games import Game
 def is_game_found(game_id):
     session = db_session.create_session()
     game = session.query(Game).get(game_id)
+    session.close()
     if not game:
         return False
     return True
@@ -15,6 +16,7 @@ def get_game(game_id):
         return {'error': 404}
     session = db_session.create_session()
     game = session.query(Game).get(game_id)
+    session.close()
     return {'game': game.to_dict()}
 
 
@@ -25,6 +27,7 @@ def delete_game(game_id):
     game = session.query(Game).get(game_id)
     session.delete(game)
     session.commit()
+    session.close()
     return {'success': 'OK'}
 
 
@@ -41,12 +44,14 @@ def edit_game(game_id, args):
     game.start_time = args.get('start_time', game.start_time)
     game.winner = args.get('winner', game.winner)
     session.commit()
+    session.close()
     return {'success': 'OK'}
 
 
 def get_games():
     session = db_session.create_session()
     games = session.query(Game).all()
+    session.close()
     return {'games': [item.to_dict() for item in games]}
 
 
@@ -60,13 +65,26 @@ def create_game(user_id):
         winner=0)
     session.add(game)
     session.commit()
+    session.close()
     return {'success': 'OK'}
 
 
 def get_free_game_id():
     session = db_session.create_session()
     games = session.query(Game).all()
+    session.close()
     for game in games:
         if len(game.players_ids.split()) == 1:
             return game.id
     return None
+
+
+def add_user_id_to_game(game_id, user_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.players_ids = game.players_ids + ' ' + str(user_id)
+    session.commit()
+    session.close()
+    return {'success': 'OK'}

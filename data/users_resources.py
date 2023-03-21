@@ -8,6 +8,7 @@ from data.add_user_parser import parser
 def abort_if_user_not_found(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
+    session.close()
     if not user:
         abort(404, message=f"User {user_id} not found")
 
@@ -17,6 +18,7 @@ class UserResource(Resource):
         abort_if_user_not_found(user_id)
         session = db_session.create_session()
         user = session.query(User).get(user_id)
+        session.close()
         return jsonify({'user': user.to_dict()})
 
     def delete(self, user_id):
@@ -25,6 +27,7 @@ class UserResource(Resource):
         user = session.query(User).get(user_id)
         session.delete(user)
         session.commit()
+        session.close()
         return jsonify({'success': 'OK'})
 
     def put(self, user_id):
@@ -39,6 +42,7 @@ class UserResource(Resource):
         user.image_name = args['image_name']
         user.set_password(args['password'])
         session.commit()
+        session.close()
         return jsonify({'success': 'OK'})
 
 
@@ -46,6 +50,7 @@ class UserListResource(Resource):
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()
+        session.close()
         return jsonify({'users': [item.to_dict() for item in users]})
 
     def post(self):
@@ -61,4 +66,5 @@ class UserListResource(Resource):
         user.image_name = user.email
         user.set_password(args['password'])
         session.commit()
+        session.close()
         return jsonify({'success': 'OK'})
