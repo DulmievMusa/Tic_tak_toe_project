@@ -61,3 +61,12 @@ def create_game(user_id):
     session.add(game)
     session.commit()
     return {'success': 'OK'}
+
+
+def get_free_game_id():
+    session = db_session.create_session()
+    games = session.query(Game).all()
+    for game in games:
+        if len(game.players_ids.split()) == 1:
+            return game.id
+    return None

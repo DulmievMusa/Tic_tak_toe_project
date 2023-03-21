@@ -7,7 +7,7 @@ from sqlalchemy_serializer import SerializerMixin
 class Game(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'games'
 
-    game_id = sqlalchemy.Column(sqlalchemy.Integer,
+    id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True, index=True)
     players_ids = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     who_move = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)

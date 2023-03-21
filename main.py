@@ -55,10 +55,9 @@ def game_search():
     if loading_count + 1 == 9:
         loading_count = 0
     session['loading_count'] = loading_count + 1
-    if not is_user_in_game(current_user.id):
+    if not is_user_in_game(current_user.id) and get_free_game_id() is None:
         create_game(current_user.id)
     session['playing'] = True
-
     return render_template('game_search_page.html',
                            link=url_for('static', filename=f'images/loading_sprites/loading_{loading_count + 1}.gif'))
 
