@@ -11,11 +11,12 @@ from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from waitress import serve
+from data import different_api
 db_session.global_init("db/main.db")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my_tic_tac_toe_key'
-
+app.register_blueprint(different_api.blueprint)
 api = Api(app)
 # api.add_resource(users_resources.UserListResource, '/api/users')
 # api.add_resource(users_resources.UserResource, '/api/user/<int:user_id>')
@@ -53,23 +54,8 @@ def index():
 @app.route('/game_search')
 @login_required
 def game_search():
-    loading_count = session.get('loading_count', 0)
-    if loading_count + 1 == 9:
-        loading_count = 0
-    session['loading_count'] = loading_count + 1
-    if not is_user_in_game(current_user.id) and get_free_game_id() is None \
-            and get_game_where_user_play(current_user.id) is None:
-        create_game(current_user.id)
-        new_game_id = get_game_where_user_play(current_user.id)
-        session['game_id'] = new_game_id
-    else:
-        if not is_user_in_game(current_user.id):
-            free_game_id = get_free_game_id()
-            session['game_id'] = free_game_id
-            add_user_id_to_game(free_game_id, current_user.id)
-    session['playing'] = True
-    return render_template('game_search_page.html',
-                           link=url_for('static', filename=f'images/loading_sprites/loading_{loading_count + 1}.gif'))
+    init_or_join_game(current_user.id)
+    return render_template('game_search_page.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])

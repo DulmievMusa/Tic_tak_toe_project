@@ -1,18 +1,30 @@
 <html>
 <head>
 <title>Example</title>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script>
-<!--
-function timedRefresh(timeoutPeriod) {
-    setTimeout("location.reload(true);",timeoutPeriod);
-}
+    function isgamefull() {
+                var request = new XMLHttpRequest();
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4 && request.status == 200) {
+                        if (request.response.response === "True") {
+                            window.location.href = '/';}
+                        };
+                };
+                request.open('GET', '/api/is_game_full', true);
+                request.responseType = 'json';
+                request.send();
 
-window.onload = timedRefresh(500);
-
-//   -->
+            };
+    function loadcontent() {
+      $("#loading").load("/api/loading_count");
+    }
+    setInterval("loadcontent();",300);
+    setInterval("isgamefull();",200);
 </script>
 </head>
 <body>
-<img src={{link}}>
+<div id="loading"></div>
+<p>test</p>
 </body>
 </html>

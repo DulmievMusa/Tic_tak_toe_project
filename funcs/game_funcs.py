@@ -1,5 +1,7 @@
 from data import db_session
 from data.games import Game
+from flask import session
+from funcs.user_funcs import *
 
 
 def is_game_found(game_id):
@@ -88,3 +90,35 @@ def add_user_id_to_game(game_id, user_id):
     session.commit()
     session.close()
     return {'success': 'OK'}
+
+
+def get_loading_frame():
+    loading_count = session.get('loading_count', 0)
+    if loading_count + 1 == 9:
+        loading_count = 0
+    session['loading_count'] = loading_count + 1
+    return loading_count
+
+
+def init_or_join_game(user_id):
+    if not is_user_in_game(user_id) and get_free_game_id() is None \
+            and get_game_where_user_play(user_id) is None:
+        create_game(user_id)
+        new_game_id = get_game_where_user_play(user_id)
+        session['game_id'] = new_game_id
+    else:
+        if not is_user_in_game(user_id):
+            free_game_id = get_free_game_id()
+            session['game_id'] = free_game_id
+            add_user_id_to_game(free_game_id, user_id)
+    session['playing'] = True
+
+
+def is_game_full(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    if len(game.players_ids.split()) == 2:
+        return True
+    return False
