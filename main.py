@@ -54,6 +54,8 @@ def index():
 @app.route('/game')
 @login_required
 def game():
+    game_id = get_game_where_user_play(current_user.id)
+    session['game_id'] = game_id
     opponent_id = get_opponent_id(session['game_id'], current_user.id)
     user = get_user_short(opponent_id)['user']
     sp = []
