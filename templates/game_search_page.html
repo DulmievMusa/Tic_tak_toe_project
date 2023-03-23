@@ -8,7 +8,7 @@
                 request.onreadystatechange = function() {
                     if (request.readyState == 4 && request.status == 200) {
                         if (request.response.response === "True") {
-                            window.location.href = '/';}
+                            window.location.href = '/game';}
                         };
                 };
                 request.open('GET', '/api/is_game_full', true);

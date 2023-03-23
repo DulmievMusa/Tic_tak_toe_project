@@ -119,6 +119,31 @@ def is_game_full(game_id):
         return {'error': 404}
     session = db_session.create_session()
     game = session.query(Game).get(game_id)
+    session.close()
     if len(game.players_ids.split()) == 2:
         return True
     return False
+
+
+def get_matrix(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    field = list(game.matrix)
+    sp = []
+    for i in range(0, len(field), 3):
+        sp.append(field[i:i + 3])
+    return sp
+
+
+def get_opponent_id(game_id, user_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    players = game.players_ids.split()
+    players.remove(str(user_id))
+    return players[0]

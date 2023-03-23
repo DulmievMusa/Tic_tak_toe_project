@@ -51,6 +51,19 @@ def index():
     return render_template('main_page.html', current_user=current_user)
 
 
+@app.route('/game')
+@login_required
+def game():
+    opponent_id = get_opponent_id(session['game_id'], current_user.id)
+    user = get_user_short(opponent_id)['user']
+    sp = []
+    sp.append(user['name'])
+    sp.append(user['country'])
+    sp.append((user['rating']))
+    return render_template('game.html', matrix=get_matrix(session['game_id']), game_id=session['game_id'], user=sp,
+                           keys=list(user))
+
+
 @app.route('/game_search')
 @login_required
 def game_search():

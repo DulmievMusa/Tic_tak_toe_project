@@ -41,6 +41,15 @@ def get_user(user_id):
     return {'user': user.to_dict()}
 
 
+def get_user_short(user_id):
+    if not is_user_found(user_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    session.close()
+    return {'user': user.to_dict(only=('name', 'rating', 'country'))}
+
+
 def delete_user(user_id):
     if not is_user_found(user_id):
         return {'error': 404}
