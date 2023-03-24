@@ -1,0 +1,17 @@
+<table style="width: 30%;
+              margin-left: auto;
+              margin-right: auto;
+              border-collapse: collapse;">
+    {% for row in matrix %}
+    <tr style="height: 200px;
+               border: 1px solid black;">
+        {% for elem in row %}
+        <td style="font-size: 250%;
+                   width: 300px;
+                   border: 1px solid black;">
+            {{ elem }}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

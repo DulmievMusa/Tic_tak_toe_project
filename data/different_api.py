@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify, url_for, session
+from flask import jsonify, url_for, session, render_template
 from funcs.user_funcs import *
 from funcs.game_funcs import *
 from . import db_session
@@ -23,3 +23,9 @@ def is_game_full_api():
     if is_game_full(session['game_id']):
         return jsonify({'response': 'True'})
     return jsonify({'response': 'False'})
+
+
+@blueprint.route('/api/get_table_matrix')
+def get_table_matrix_api():
+    matrix = get_matrix(session['game_id'])
+    return render_template('game_table.html', matrix=matrix)

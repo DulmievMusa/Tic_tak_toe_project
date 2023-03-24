@@ -4,13 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<body style="background: url(../static/images/backgrounds/tree1.jpg);">
 <div style="display: flex;
             justify-content: space-between;
-            width: 600px;
-            background-color: #957558;">{% for item in user %}
+            width: 30%;
+            background-color: #957558;
+            border: 6px solid #ebdddd;
+            border-radius: 100px 15px 100px 15px;
+            padding-left: 3%;
+            padding-right: 3%;
+            margin-left: auto;
+            margin-right: auto;">{% for item in user %}
         <h2>{{item}}</h2>
     {% endfor %}
 </div>
+<table>
+    <tr>
+        <th></th>
+    </tr>
+</table>
 </body>
 </html>
