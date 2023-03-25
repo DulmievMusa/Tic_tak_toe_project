@@ -1,15 +1,24 @@
-<table style="width: 30%;
+<table style="margin-top: 50px;
               margin-left: auto;
               margin-right: auto;
               border-collapse: collapse;">
     {% for row in matrix %}
-    <tr style="height: 200px;
-               border: 1px solid black;">
+    <tr style=" height: 160px;
+               border: 10px solid black;">
         {% for elem in row %}
-        <td style="font-size: 250%;
-                   width: 300px;
-                   border: 1px solid black;">
-            {{ elem }}
+        <td style="border: 10px solid black;
+                   width: 160px">
+            {% if elem != 'space' %}
+                <button style="background: transparent;
+                               border: none !important;"
+                        onclick="window.location.href = '/';"><img src={{elem}}></button>
+            {% else %}
+                <button style="background: transparent;
+                               border: none !important;
+                               width: 155px;
+                               height: 155px;"
+                        onclick="window.location.href = '/';"></button>
+            {% endif %}
         </td>
         {% endfor %}
     </tr>

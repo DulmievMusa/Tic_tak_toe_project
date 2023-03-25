@@ -1,6 +1,6 @@
 from data import db_session
 from data.games import Game
-from flask import session
+from flask import session, url_for
 from funcs.user_funcs import *
 
 
@@ -148,3 +148,27 @@ def get_opponent_id(game_id, user_id):
     players = game.players_ids.split()
     players.remove(str(user_id))
     return players[0]
+
+
+def to_images_matrix(matrix):
+    mat = []
+    for row in matrix:
+        sp = []
+        for elem in row:
+            if elem == '0':
+                sp.append(url_for('static', filename='images/game_sprites/circle.png'))
+            elif elem == 'X':
+                sp.append(url_for('static', filename='images/game_sprites/cross.png'))
+            else:
+                sp.append('space')
+        mat.append(sp)
+    return mat
+
+
+def get_str_matrix(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    return game.matrix

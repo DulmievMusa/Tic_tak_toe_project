@@ -20,12 +20,35 @@ def get_loading_count_api():
 
 @blueprint.route('/api/is_game_full')
 def is_game_full_api():
-    if is_game_full(session['game_id']):
+    game_id = session.get('game_id', '')
+    if not game_id:
+        return jsonify({'error': 404})
+    if is_game_full(game_id):
         return jsonify({'response': 'True'})
     return jsonify({'response': 'False'})
 
 
 @blueprint.route('/api/get_table_matrix')
 def get_table_matrix_api():
-    matrix = get_matrix(session['game_id'])
-    return render_template('game_table.html', matrix=matrix)
+    game_id = session.get('game_id', '')
+    if not game_id:
+        return jsonify({'error': 404})
+    matrix = get_matrix(game_id)
+    images_matrix = to_images_matrix(matrix)
+    return render_template('game_table.html', matrix=images_matrix)
+
+
+@blueprint.route('/api/is_matrix_change')
+def is_matrix_change_api():
+    if not session.get('game_id', ''):
+        return jsonify({'error': 404})
+    if session['str_matrix'] != get_str_matrix(session['game_id']):
+        session['str_matrix'] = get_str_matrix(session['game_id'])
+        return jsonify({'response': 'True'})
+    else:
+        return jsonify({'response': 'False'})
+
+
+@blueprint.route('/api/cell_pressed/<int:index>')
+def cell_pressed_api(index):
+    return str(index)

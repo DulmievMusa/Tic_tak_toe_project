@@ -62,7 +62,9 @@ def game():
     sp.append(user['name'])
     sp.append(user['country'])
     sp.append((user['rating']))
-    return render_template('game.html', matrix=get_matrix(session['game_id']), game_id=session['game_id'], user=sp,
+    matrix = get_matrix(session['game_id'])
+    session['str_matrix'] = ''
+    return render_template('game.html', matrix=matrix, game_id=session['game_id'], user=sp,
                            keys=list(user))
 
 
@@ -118,7 +120,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    session.clear()
+    session.clear()  # may be deleted
     logout_user()
     return redirect("/")
 
