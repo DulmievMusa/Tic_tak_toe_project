@@ -112,6 +112,7 @@ def init_or_join_game(user_id):
             session['game_id'] = free_game_id
             add_user_id_to_game(free_game_id, user_id)
     session['playing'] = True
+    session['game_id'] = get_game_where_user_play(user_id)
 
 
 def is_game_full(game_id):
