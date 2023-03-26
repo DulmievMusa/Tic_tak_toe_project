@@ -8,16 +8,16 @@
         {% for elem in row %}
         <td style="border: 10px solid black;
                    width: 160px">
-            {% if elem != 'space' %}
+            {% if elem[0] != 'space' %}
                 <button style="background: transparent;
                                border: none !important;"
-                        onclick="window.location.href = '/';"><img src={{elem}}></button>
+                        onclick="buttonpressed({{elem[1]}});"><img src={{elem[0]}}></button>
             {% else %}
                 <button style="background: transparent;
                                border: none !important;
                                width: 155px;
                                height: 155px;"
-                        onclick="window.location.href = '/';"></button>
+                        onclick="buttonpressed({{elem[1]}});"></button>
             {% endif %}
         </td>
         {% endfor %}

@@ -35,7 +35,8 @@ def get_table_matrix_api():
         return jsonify({'error': 404})
     matrix = get_matrix(game_id)
     images_matrix = to_images_matrix(matrix)
-    return render_template('game_table.html', matrix=images_matrix)
+    matrix_with_indexes = add_indexes_to_matrix(images_matrix)
+    return render_template('game_table.html', matrix=matrix_with_indexes)
 
 
 @blueprint.route('/api/is_matrix_change')

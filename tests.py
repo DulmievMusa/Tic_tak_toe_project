@@ -4,4 +4,4 @@ from data import db_session
 from flask import url_for, Flask
 
 db_session.global_init("db/main.db")
-print(to_images_matrix(get_matrix(session['game_id'])))
+print(add_indexes_to_matrix([['f', 'h'], ['h', 'n']]))

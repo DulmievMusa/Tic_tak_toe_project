@@ -172,3 +172,15 @@ def get_str_matrix(game_id):
     game = session.query(Game).get(game_id)
     session.close()
     return game.matrix
+
+
+def add_indexes_to_matrix(matrix):
+    mat = []
+    index = 0
+    for row in matrix:
+        sp = []
+        for elem in row:
+            index += 1
+            sp.append((elem, str(index)))
+        mat.append(sp.copy())
+    return mat
