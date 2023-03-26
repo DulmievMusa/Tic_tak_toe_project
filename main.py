@@ -57,15 +57,10 @@ def game():
     game_id = get_game_where_user_play(current_user.id)
     session['game_id'] = game_id
     opponent_id = get_opponent_id(session['game_id'], current_user.id)
-    user = get_user_short(opponent_id)['user']
-    sp = []
-    sp.append(user['name'])
-    sp.append(user['country'])
-    sp.append((user['rating']))
-    matrix = get_matrix(session['game_id'])
+    opponent_list = get_short_user_list(opponent_id)
+    user_list = get_short_user_list(current_user.id)
     session['str_matrix'] = ''
-    return render_template('game.html', matrix=matrix, game_id=session['game_id'], user=sp,
-                           keys=list(user))
+    return render_template('game.html', opponent=opponent_list, user=user_list)
 
 
 @app.route('/game_search')

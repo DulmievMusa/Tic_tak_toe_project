@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify, url_for, session, render_template, request
+from flask import jsonify, url_for, session, render_template, request, redirect
 from funcs.user_funcs import *
 from funcs.game_funcs import *
 from flask_login import current_user
@@ -68,6 +68,20 @@ def cell_pressed_api(index):
         matrix = ''.join(matrix)
         update_matrix(game_id, matrix)
     increase_count(game_id)
-    change_who_move(game_id)
+    winner = get_who_win(game_id)
+    if winner != 'nothing happened':
+        end_game(game_id, winner)
+        return jsonify({'response': 'end_game'})
+    else:
+        change_who_move(game_id)
     return jsonify({'response': 'success'})
 
+
+@blueprint.route('/api/is_game_finished')
+def is_game_finished_api():
+    if not session.get('game_id', ''):
+        return jsonify({'response': 'error'})
+    winner = get_who_win(session['game_id'])
+    if winner != 'nothing happened':
+        return jsonify({'response': 'end_game'})
+    return jsonify({'response': 'nothing happened'})

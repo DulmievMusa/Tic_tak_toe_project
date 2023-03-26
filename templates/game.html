@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
             function loadtable() {
                         var request = new XMLHttpRequest();
@@ -26,6 +26,8 @@
                             if (request.readyState == 4 && request.status == 200) {
                                 if (request.response.response === "error") {
                                     window.location.href = '/';}
+                                else if (request.response.response === "end_game") {
+                                    window.location.href = '/';}
                                 else {
                                     $("#table_div").load("/api/get_table_matrix");};
                                 };
@@ -34,6 +36,22 @@
                         request.responseType = 'json';
                         request.send();
                         };
+
+            function game_finished() {
+                        var request = new XMLHttpRequest();
+                        request.onreadystatechange = function() {
+                            if (request.readyState == 4 && request.status == 200) {
+                                if (request.response.response === "error") {
+                                    window.location.href = '/';}
+                                else if (request.response.response === "end_game") {
+                                    window.location.href = '/';}
+                                };
+                        };
+                        request.open('GET', '/api/is_game_finished', true);
+                        request.responseType = 'json';
+                        request.send();
+                        };
+            setInterval("game_finished();",200);
     </script>
 </head>
 <body style="background: url(../static/images/backgrounds/tree1.jpg);">
@@ -46,10 +64,34 @@
             padding-left: 3%;
             padding-right: 3%;
             margin-left: auto;
-            margin-right: auto;">{% for item in user %}
-        <h2>{{item}}</h2>
+            margin-right: auto;"
+        id="opponent_div">{% for item in opponent %}
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{item}}</h2>
     {% endfor %}
 </div>
-<div id="table_div"></div>
+<div style="display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            margin-left: auto;
+            margin-right: auto;">
+    <h1 id="end_game" style="font-family: Arial, Helvetica, sans-serif;">ddfgh</h1>
+    <div id="table_div"></div>
+    <h1 id="timer" style="font-family: Arial, Helvetica, sans-serif;">Timer:</h1>
+</div>
+<div style="display: flex;
+            justify-content: space-between;
+            width: 500px;
+            background-color: #957558;
+            border: 6px solid #ebdddd;
+            border-radius: 100px 100px 100px 100px;
+            padding-left: 3%;
+            padding-right: 3%;
+            margin-left: auto;
+            margin-right: auto;"
+        id="user_div">{% for item in user %}
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{item}}</h2>
+    {% endfor %}
+</div>
 </body>
 </html>

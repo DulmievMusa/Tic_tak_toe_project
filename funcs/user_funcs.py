@@ -98,3 +98,12 @@ def add_user(args):
     session.commit()
     session.close()
     return {'success': 'OK'}
+
+
+def get_short_user_list(user_id):
+    user = get_user_short(user_id)['user']
+    sp = []
+    sp.append(user['name'])
+    sp.append(user['country'])
+    sp.append((user['rating']))
+    return sp

@@ -238,3 +238,64 @@ def change_who_move(game_id):
     game.who_move = sp[0]
     session.commit()
     session.close()
+
+
+def get_who_win(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    matrix = get_matrix(game_id)
+    game = get_game(game_id)['game']
+    if game['winner'] != 0:
+        return game['winner']
+    x_winner = game['who_move_first']
+    o_winner = get_opponent_id(game_id, game['who_move_first'])
+    fix, six, thix = 0, 0, 0  # first index x
+    fi0, si0, thi0 = 0, 0, 0
+    for row in matrix:
+        if row == ['X', 'X', 'X']:
+            return x_winner
+        elif row == ['0', '0', '0']:
+            return o_winner
+        if row[0] == 'X':
+            fix += 1
+        elif row[0] == '0':
+            fi0 += 1
+        if row[1] == 'X':
+            six += 1
+        elif row[1] == '0':
+            si0 += 1
+        if row[2] == 'X':
+            thix += 1
+        elif row[2] == '0':
+            thi0 += 1
+        if fix == 3 or six == 3 or thix == 3:
+            return x_winner
+        elif fi0 == 3 or si0 == 3 or thi0 == 3:
+            return o_winner
+    if matrix[0][0] == 'X' and matrix[1][1] == 'X' and matrix[2][2] == 'X':
+        return x_winner
+    elif matrix[0][0] == '0' and matrix[1][1] == '0' and matrix[2][2] == '0':
+        return o_winner
+    if matrix[0][2] == 'X' and matrix[1][1] == 'X' and matrix[2][0] == 'X':
+        return x_winner
+    elif matrix[0][2] == '0' and matrix[1][1] == '0' and matrix[2][0] == '0':
+        return o_winner
+
+    if game['count'] == 9:
+        return -1
+
+    return 'nothing happened'
+
+
+def set_winner(winner, game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.winner = winner
+    session.commit()
+    session.close()
+
+
+def end_game(game_id, winner):
+    set_winner(winner, game_id)
