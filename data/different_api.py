@@ -1,7 +1,8 @@
 import flask
-from flask import jsonify, url_for, session, render_template
+from flask import jsonify, url_for, session, render_template, request
 from funcs.user_funcs import *
 from funcs.game_funcs import *
+from flask_login import current_user
 from . import db_session
 
 
@@ -52,4 +53,21 @@ def is_matrix_change_api():
 
 @blueprint.route('/api/cell_pressed/<int:index>')
 def cell_pressed_api(index):
-    return str(index)
+    if not session.get('game_id', ''):
+        return jsonify({'response': 'error'})
+    game_id = session['game_id']
+    game = get_game(game_id)['game']
+    if game['who_move'] != current_user.id:
+        return jsonify({'response': 'not_move'})
+    matrix = list(get_str_matrix(game_id))
+    if matrix[index] != 'X' and matrix[index] != '0':
+        if game['who_move_first'] == current_user.id:
+            matrix[index] = 'X'
+        else:
+            matrix[index] = '0'
+        matrix = ''.join(matrix)
+        update_matrix(game_id, matrix)
+    increase_count(game_id)
+    change_who_move(game_id)
+    return jsonify({'response': 'success'})
+

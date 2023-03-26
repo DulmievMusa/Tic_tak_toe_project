@@ -2,6 +2,7 @@ from data import db_session
 from data.games import Game
 from flask import session, url_for
 from funcs.user_funcs import *
+from random import choice
 
 
 def is_game_found(game_id):
@@ -61,9 +62,10 @@ def create_game(user_id):
     session = db_session.create_session()
     game = Game(
         players_ids=user_id,
+        who_move_first=0,
         who_move=0,
-        matrix='000000000',
-        waitcount=0,
+        matrix='YYYYYYYYY',
+        count=0,
         winner=0)
     session.add(game)
     session.commit()
@@ -111,6 +113,10 @@ def init_or_join_game(user_id):
             free_game_id = get_free_game_id()
             session['game_id'] = free_game_id
             add_user_id_to_game(free_game_id, user_id)
+            opponent_id = get_opponent_id(free_game_id, user_id)
+            who_move_id = choice_who_move(user_id, opponent_id)
+            set_who_move(free_game_id, who_move_id)
+
     session['playing'] = True
     session['game_id'] = get_game_where_user_play(user_id)
 
@@ -176,7 +182,7 @@ def get_str_matrix(game_id):
 
 def add_indexes_to_matrix(matrix):
     mat = []
-    index = 0
+    index = -1
     for row in matrix:
         sp = []
         for elem in row:
@@ -184,3 +190,51 @@ def add_indexes_to_matrix(matrix):
             sp.append((elem, str(index)))
         mat.append(sp.copy())
     return mat
+
+
+def update_matrix(game_id, matrix):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.matrix = matrix
+    session.commit()
+    session.close()
+
+
+def choice_who_move(user_id, opponent_id):
+    return choice([user_id, opponent_id])
+
+
+def set_who_move(game_id, who_move_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.who_move = who_move_id
+    game.who_move_first = who_move_id
+    session.commit()
+    session.close()
+
+
+def increase_count(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.count = game.count + 1
+    session.commit()
+    session.close()
+
+
+def change_who_move(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    moving = game.who_move
+    sp = game.players_ids.split()
+    sp.remove(str(moving))
+    game.who_move = sp[0]
+    session.commit()
+    session.close()

@@ -10,14 +10,17 @@
                    width: 160px">
             {% if elem[0] != 'space' %}
                 <button style="background: transparent;
-                               border: none !important;"
-                        onclick="buttonpressed({{elem[1]}});"><img src={{elem[0]}}></button>
+                               border: none !important;
+                               width: 155px;
+                               height: 155px;"
+                        onclick="cellpressed({{elem[1]}});"><img src={{elem[0]}} style="width: 100%;
+                                                                                        height: 100%;"></button>
             {% else %}
                 <button style="background: transparent;
                                border: none !important;
                                width: 155px;
                                height: 155px;"
-                        onclick="buttonpressed({{elem[1]}});"></button>
+                        onclick="cellpressed({{elem[1]}});"></button>
             {% endif %}
         </td>
         {% endfor %}

@@ -10,11 +10,12 @@ class Game(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True, index=True)
     players_ids = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    who_move_first = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     who_move = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     matrix = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     last_time = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
-    waitcount = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    count = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     start_time = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
     winner = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)

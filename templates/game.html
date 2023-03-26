@@ -20,11 +20,14 @@
                     };
             setInterval("loadtable();",200);
 
-            function buttonpressed(index) {
+            function cellpressed(index) {
                         var request = new XMLHttpRequest();
                         request.onreadystatechange = function() {
                             if (request.readyState == 4 && request.status == 200) {
-                                    window.location.href = '/api/cell_pressed/' + index;
+                                if (request.response.response === "error") {
+                                    window.location.href = '/';}
+                                else {
+                                    $("#table_div").load("/api/get_table_matrix");};
                                 };
                         };
                         request.open('GET', '/api/cell_pressed/' + index, true);
@@ -36,7 +39,7 @@
 <body style="background: url(../static/images/backgrounds/tree1.jpg);">
 <div style="display: flex;
             justify-content: space-between;
-            width: 30%;
+            width: 500px;
             background-color: #957558;
             border: 6px solid #ebdddd;
             border-radius: 100px 15px 100px 15px;
