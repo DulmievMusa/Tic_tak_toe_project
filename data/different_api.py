@@ -41,7 +41,7 @@ def get_table_matrix_api():
     return render_template('game_table.html', matrix=matrix_with_indexes)
 
 
-@blueprint.route('/api/is_matrix_change')
+# @blueprint.route('/api/is_matrix_change')
 def is_matrix_change_api():
     if not session.get('game_id', ''):
         return jsonify({'error': 404})
@@ -78,7 +78,7 @@ def cell_pressed_api(index):
     return jsonify({'response': 'success'})
 
 
-@blueprint.route('/api/is_game_finished')
+# @blueprint.route('/api/is_game_finished')
 def is_game_finished_api():
     if not session.get('game_id', ''):
         return jsonify({'response': 'error'})
@@ -96,3 +96,23 @@ def get_timer():
     if time_delta.total_seconds() >= 30:
         return jsonify({'response': 'loss'})
     return jsonify({'response': str(time_delta.total_seconds())})
+
+
+@blueprint.route('/api/do_all_game')
+def do_all_game():
+    slovar = {}
+    if not session.get('game_id', ''):
+        return jsonify({'error': 404})
+    if session['str_matrix'] != get_str_matrix(session['game_id']):
+        session['str_matrix'] = get_str_matrix(session['game_id'])
+        slovar['is_matrix_change'] = 'True'
+    else:
+        slovar['is_matrix_change'] = 'False'
+
+    winner = get_who_win(session['game_id'])
+    if winner != 'nothing happened':
+        slovar['is_game_finished'] = 'end_game'
+    else:
+        slovar['is_game_finished'] = 'nothing happened'
+
+    return jsonify(slovar)
