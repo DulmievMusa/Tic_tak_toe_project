@@ -17,7 +17,7 @@ def is_user_in_game(user_id):
     games = session.query(Game).all()
     session.close()
     for game in games:
-        if str(user_id) in game.players_ids.split():
+        if str(user_id) in game.players_ids.split() and game.winner == 0:
             return True
     return False
 
@@ -27,7 +27,7 @@ def get_game_where_user_play(user_id):
     games = session.query(Game).all()
     session.close()
     for game in games:
-        if str(user_id) in game.players_ids.split():
+        if str(user_id) in game.players_ids.split() and game.winner == 0:
             return game.id
     return None
 

@@ -18,7 +18,7 @@
                         request.send();
 
                     };
-            setInterval("loadtable();",200);
+            setInterval("loadtable();",1000);
 
             function cellpressed(index) {
                         var request = new XMLHttpRequest();
@@ -51,10 +51,11 @@
                         request.responseType = 'json';
                         request.send();
                         };
-            setInterval("game_finished();",200);
+            setInterval("game_finished();",1000);
     </script>
 </head>
 <body style="background: url(../static/images/backgrounds/tree1.jpg);">
+<div style="margin-top: 3%;">
 <div style="display: flex;
             justify-content: space-between;
             width: 500px;
@@ -70,14 +71,16 @@
     {% endfor %}
 </div>
 <div style="display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-top: 50px;
             margin-bottom: 50px;
             margin-left: auto;
             margin-right: auto;">
-    <h1 id="end_game" style="font-family: Arial, Helvetica, sans-serif;">ddfgh</h1>
+    <div id="end_game" style="font-family: Arial, Helvetica, sans-serif;
+                             margin-right: 2%;"></div>
     <div id="table_div"></div>
-    <h1 id="timer" style="font-family: Arial, Helvetica, sans-serif;">Timer:</h1>
+    <div id="timer" style="font-family: Arial, Helvetica, sans-serif;
+                          margin-left: 2%;"></div>
 </div>
 <div style="display: flex;
             justify-content: space-between;
@@ -92,6 +95,7 @@
         id="user_div">{% for item in user %}
         <h2 style="font-family: Arial, Helvetica, sans-serif;">{{item}}</h2>
     {% endfor %}
+</div>
 </div>
 </body>
 </html>

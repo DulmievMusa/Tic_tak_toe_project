@@ -78,7 +78,7 @@ def get_free_game_id():
     games = session.query(Game).all()
     session.close()
     for game in games:
-        if len(game.players_ids.split()) == 1:
+        if len(game.players_ids.split()) == 1 and game.winner == 0:
             return game.id
     return None
 
@@ -299,3 +299,12 @@ def set_winner(winner, game_id):
 
 def end_game(game_id, winner):
     set_winner(winner, game_id)
+
+
+def get_last_time(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    return game.last_time

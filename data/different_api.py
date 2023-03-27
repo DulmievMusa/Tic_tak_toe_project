@@ -3,6 +3,7 @@ from flask import jsonify, url_for, session, render_template, request, redirect
 from funcs.user_funcs import *
 from funcs.game_funcs import *
 from flask_login import current_user
+from datetime import datetime
 from . import db_session
 
 
@@ -57,7 +58,7 @@ def cell_pressed_api(index):
         return jsonify({'response': 'error'})
     game_id = session['game_id']
     game = get_game(game_id)['game']
-    if game['who_move'] != current_user.id:
+    if game['who_move'] != current_user.id or game['winner'] != 0:
         return jsonify({'response': 'not_move'})
     matrix = list(get_str_matrix(game_id))
     if matrix[index] != 'X' and matrix[index] != '0':
@@ -85,3 +86,13 @@ def is_game_finished_api():
     if winner != 'nothing happened':
         return jsonify({'response': 'end_game'})
     return jsonify({'response': 'nothing happened'})
+
+
+@blueprint.route('/api/get_timer')
+def get_timer():
+    last_time = get_last_time(session['game_id'])
+    now_time = datetime.now()
+    time_delta = now_time - last_time
+    if time_delta.total_seconds() >= 30:
+        return jsonify({'response': 'loss'})
+    return jsonify({'response': str(time_delta.total_seconds())})
