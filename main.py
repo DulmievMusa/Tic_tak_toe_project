@@ -48,13 +48,17 @@ def test_reload():
 
 @app.route('/')
 def index():
+    session['ending_seconds'] = -1
     return render_template('main_page.html', current_user=current_user)
 
 
 @app.route('/game')
 @login_required
 def game():
-    game_id = get_game_where_user_play(current_user.id)
+    if session['playing'] is True:
+        game_id = get_game_where_user_play(current_user.id)
+    else:
+        game_id = session['game_id']
     session['game_id'] = game_id
     opponent_id = get_opponent_id(session['game_id'], current_user.id)
     opponent_list = get_short_user_list(opponent_id)
@@ -86,7 +90,7 @@ def register():
         db_sess.close()
         add_user({
                  'name': form.name.data,
-                 'rating': 0,
+                 'rating': 50,
                  'country': form.country.data,
                  'email': form.email.data,
                  'password': form.password.data})
@@ -104,7 +108,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             session['playing'] = False
-            session['game_id'] = None
+            session['game_id'] = -1
             return redirect("/")
         return render_template('login.html',
                                message="Incorrect login or password",

@@ -11,9 +11,7 @@
                             if (request.readyState == 4 && request.status == 200) {
                                 if (request.response.response === "error") {
                                     window.location.href = '/';}
-                                else if (request.response.response === "end_game") {
-                                    window.location.href = '/';}
-                                else {
+                                else if (request.response.response !== "end_game") {
                                     $("#table_div").load("/api/get_table_matrix");};
                                 };
                         };
@@ -29,13 +27,10 @@
                                 if (request.response.is_matrix_change === "True") {
                                     $("#table_div").load("/api/get_table_matrix");}
                                 if (request.response.is_game_finished === "end_game") {
-                                    window.location.href = '/';}
+                                    clearInterval(window.load);}
                                 if (request.response.is_game_finished === "error") {
                                     window.location.href = '/';}
-                                if (request.response.seconds === "loss") {
-                                    window.location.href = '/';}
-                                else {
-                                    document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"};
+                                document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
                                 };
                         };
                         request.open('GET', '/api/do_all_game', true);

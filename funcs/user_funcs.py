@@ -107,3 +107,13 @@ def get_short_user_list(user_id):
     sp.append(user['country'])
     sp.append((user['rating']))
     return sp
+
+
+def get_where_user_sitting(user_id):
+    session = db_session.create_session()
+    games = session.query(Game).all()
+    session.close()
+    for game in games:
+        if str(user_id) in game.players_ids.split() and game.winner == 0:
+            return game.id
+    return None

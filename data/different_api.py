@@ -71,7 +71,8 @@ def cell_pressed_api(index):
     increase_count(game_id)
     winner = get_who_win(game_id)
     if winner != 'nothing happened':
-        end_game(game_id, winner)
+        seconds = str(get_timer())
+        end_game(game_id, winner, seconds)
         return jsonify({'response': 'end_game'})
     else:
         change_who_move(game_id)
@@ -88,7 +89,7 @@ def is_game_finished_api():
     return jsonify({'response': 'nothing happened'})
 
 
-@blueprint.route('/api/get_timer')
+# @blueprint.route('/api/get_timer')
 def get_timer_api():
     last_time = get_last_time(session['game_id'])
     now_time = datetime.now()
@@ -104,18 +105,13 @@ def do_all_game():
     if not session.get('game_id', ''):
         return jsonify({'error': 404})
     game_id = session['game_id']
+
     seconds = str(get_timer())
     slovar['seconds'] = seconds
-    timer_style = []
-    who_move = get_who_move(game_id)
-    if who_move == current_user.id:
-        timer_style.append('background-color: #fff')
-    else:
-        timer_style.append('background-color: #A9A9A9')
-    slovar['who_move'] = who_move
     if seconds == 'loss':
+        slovar['is_game_finished'] = 'end_game'
         winner = get_who_win_if_timer_end(game_id)
-        end_game(game_id, winner)
+        end_game(game_id, winner, seconds)
 
     if session['str_matrix'] != get_str_matrix(game_id):
         session['str_matrix'] = get_str_matrix(game_id)
@@ -126,10 +122,10 @@ def do_all_game():
     winner = get_who_win(game_id)
     if winner != 'nothing happened':
         slovar['is_game_finished'] = 'end_game'
+        end_game(game_id, winner, seconds)
     else:
         slovar['is_game_finished'] = 'nothing happened'
-    timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px'])
-    timer_style_st = ';'.join(timer_style) + ';'
-    slovar['timer_style'] = timer_style_st
+
+    slovar['timer_style'] = get_timer_style(game_id, current_user.id)
 
     return jsonify(slovar)

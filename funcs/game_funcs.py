@@ -117,6 +117,7 @@ def init_or_join_game(user_id):
             opponent_id = get_opponent_id(free_game_id, user_id)
             who_move_id = choice_who_move(user_id, opponent_id)
             set_who_move(free_game_id, who_move_id)
+            set_last_time(free_game_id)
 
     session['playing'] = True
     session['game_id'] = get_game_where_user_play(user_id)
@@ -299,8 +300,10 @@ def set_winner(winner, game_id):
     session.close()
 
 
-def end_game(game_id, winner):
+def end_game(game_id, winner, ending_seconds):
     set_winner(winner, game_id)
+    session['playing'] = False
+    session['ending_seconds'] = ending_seconds
 
 
 def get_last_time(game_id):
@@ -313,6 +316,8 @@ def get_last_time(game_id):
 
 
 def get_timer():
+    if session['playing'] is False:
+        return session['ending_seconds']
     if not is_game_found(session['game_id']):
         return {'error': 404}
     last_time = get_last_time(session['game_id'])
@@ -340,3 +345,25 @@ def get_who_move(game_id):
     game = session.query(Game).get(game_id)
     session.close()
     return game.who_move
+
+
+def set_last_time(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.last_time = datetime.now()
+    session.commit()
+    session.close()
+
+
+def get_timer_style(game_id, user_id):
+    timer_style = []
+    who_move = get_who_move(game_id)
+    if who_move == user_id:
+        timer_style.append('background-color: #fff')
+    else:
+        timer_style.append('background-color: #A9A9A9')
+    timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px'])
+    timer_style_st = ';'.join(timer_style) + ';'
+    return timer_style_st
