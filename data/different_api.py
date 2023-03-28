@@ -89,13 +89,13 @@ def is_game_finished_api():
 
 
 @blueprint.route('/api/get_timer')
-def get_timer():
+def get_timer_api():
     last_time = get_last_time(session['game_id'])
     now_time = datetime.now()
     time_delta = now_time - last_time
     if time_delta.total_seconds() >= 30:
         return jsonify({'response': 'loss'})
-    return jsonify({'response': str(time_delta.total_seconds())})
+    return jsonify({'response': str(int(time_delta.total_seconds()))})
 
 
 @blueprint.route('/api/do_all_game')
@@ -103,16 +103,33 @@ def do_all_game():
     slovar = {}
     if not session.get('game_id', ''):
         return jsonify({'error': 404})
-    if session['str_matrix'] != get_str_matrix(session['game_id']):
-        session['str_matrix'] = get_str_matrix(session['game_id'])
+    game_id = session['game_id']
+    seconds = str(get_timer())
+    slovar['seconds'] = seconds
+    timer_style = []
+    who_move = get_who_move(game_id)
+    if who_move == current_user.id:
+        timer_style.append('background-color: #fff')
+    else:
+        timer_style.append('background-color: #A9A9A9')
+    slovar['who_move'] = who_move
+    if seconds == 'loss':
+        winner = get_who_win_if_timer_end(game_id)
+        end_game(game_id, winner)
+
+    if session['str_matrix'] != get_str_matrix(game_id):
+        session['str_matrix'] = get_str_matrix(game_id)
         slovar['is_matrix_change'] = 'True'
     else:
         slovar['is_matrix_change'] = 'False'
 
-    winner = get_who_win(session['game_id'])
+    winner = get_who_win(game_id)
     if winner != 'nothing happened':
         slovar['is_game_finished'] = 'end_game'
     else:
         slovar['is_game_finished'] = 'nothing happened'
+    timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px'])
+    timer_style_st = ';'.join(timer_style) + ';'
+    slovar['timer_style'] = timer_style_st
 
     return jsonify(slovar)

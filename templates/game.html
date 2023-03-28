@@ -32,13 +32,17 @@
                                     window.location.href = '/';}
                                 if (request.response.is_game_finished === "error") {
                                     window.location.href = '/';}
+                                if (request.response.seconds === "loss") {
+                                    window.location.href = '/';}
+                                else {
+                                    document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"};
                                 };
                         };
                         request.open('GET', '/api/do_all_game', true);
                         request.responseType = 'json';
                         request.send();
                 };
-            setInterval("do_all();",1000);
+            window.load = setInterval("do_all();",500);
     </script>
 </head>
 <body style="background: url(../static/images/backgrounds/tree1.jpg);">

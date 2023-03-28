@@ -3,6 +3,7 @@ from data.games import Game
 from flask import session, url_for
 from funcs.user_funcs import *
 from random import choice
+from datetime import datetime
 
 
 def is_game_found(game_id):
@@ -236,6 +237,7 @@ def change_who_move(game_id):
     sp = game.players_ids.split()
     sp.remove(str(moving))
     game.who_move = sp[0]
+    game.last_time = datetime.now()
     session.commit()
     session.close()
 
@@ -308,3 +310,33 @@ def get_last_time(game_id):
     game = session.query(Game).get(game_id)
     session.close()
     return game.last_time
+
+
+def get_timer():
+    if not is_game_found(session['game_id']):
+        return {'error': 404}
+    last_time = get_last_time(session['game_id'])
+    now_time = datetime.now()
+    time_delta = now_time - last_time
+    if 15 - time_delta.total_seconds() < 0:
+        return 'loss'
+    return 15 - int(time_delta.total_seconds())
+
+
+def get_who_win_if_timer_end(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    winner = get_opponent_id(game_id, game.who_move)
+    return winner
+
+
+def get_who_move(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    return game.who_move
