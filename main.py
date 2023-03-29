@@ -55,21 +55,29 @@ def index():
 @app.route('/game')
 @login_required
 def game():
-    if session['playing'] is True:
-        game_id = get_game_where_user_play(current_user.id)
-    else:
-        game_id = session['game_id']
-    session['game_id'] = game_id
-    opponent_id = get_opponent_id(session['game_id'], current_user.id)
-    opponent_list = get_short_user_list(opponent_id)
-    user_list = get_short_user_list(current_user.id)
-    session['str_matrix'] = ''
+    try:
+        session['playing'] = session.get('playing', False)
+        if session['playing'] is True:
+            game_id = get_game_where_user_play(current_user.id)
+        else:
+            game_id = session.get('game_id', None)
+            if game_id is None:
+                return redirect('/')
+        session['game_id'] = game_id
+        opponent_id = get_opponent_id(session['game_id'], current_user.id)
+        opponent_list = get_short_user_list(opponent_id)
+        user_list = get_short_user_list(current_user.id)
+        session['str_matrix'] = ''
+    except Exception as e:
+        print(e)
+        return redirect('/')
     return render_template('game.html', opponent=opponent_list, user=user_list)
 
 
 @app.route('/game_search')
 @login_required
 def game_search():
+    session['winner'] = 0
     init_or_join_game(current_user.id)
     return render_template('game_search_page.html')
 

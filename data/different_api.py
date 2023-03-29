@@ -71,8 +71,6 @@ def cell_pressed_api(index):
     increase_count(game_id)
     winner = get_who_win(game_id)
     if winner != 'nothing happened':
-        seconds = str(get_timer())
-        end_game(game_id, winner, seconds)
         return jsonify({'response': 'end_game'})
     else:
         change_who_move(game_id)
@@ -105,7 +103,6 @@ def do_all_game():
     if not session.get('game_id', ''):
         return jsonify({'error': 404})
     game_id = session['game_id']
-
     seconds = str(get_timer())
     slovar['seconds'] = seconds
     if seconds == 'loss':
@@ -123,7 +120,8 @@ def do_all_game():
     if winner != 'nothing happened':
         slovar['is_game_finished'] = 'end_game'
         end_game(game_id, winner, seconds)
-    else:
+        slovar['opponent_rating'] = str(get_user(get_opponent_id(game_id, current_user.id))['user']['rating'])
+    elif winner == 'nothing happened':
         slovar['is_game_finished'] = 'nothing happened'
 
     slovar['timer_style'] = get_timer_style(game_id, current_user.id)

@@ -2,8 +2,9 @@ from data import db_session
 from data.games import Game
 from flask import session, url_for
 from funcs.user_funcs import *
-from random import choice
+from random import choice, randint
 from datetime import datetime
+from flask_login import current_user
 
 
 def is_game_found(game_id):
@@ -301,9 +302,16 @@ def set_winner(winner, game_id):
 
 
 def end_game(game_id, winner, ending_seconds):
-    set_winner(winner, game_id)
+    if session['winner'] != 0:
+        return
     session['playing'] = False
     session['ending_seconds'] = ending_seconds
+    if not is_winner_in_game(game_id):
+        increase_rating(winner, winner)
+        increase_rating(get_opponent_id(game_id, winner), winner)
+    set_winner(winner, game_id)
+    session['winner'] = winner
+    print('end_game_func')
 
 
 def get_last_time(game_id):
@@ -367,3 +375,15 @@ def get_timer_style(game_id, user_id):
     timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px'])
     timer_style_st = ';'.join(timer_style) + ';'
     return timer_style_st
+
+
+def is_winner_in_game(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    if game.winner == 0:
+        return False
+    else:
+        return True

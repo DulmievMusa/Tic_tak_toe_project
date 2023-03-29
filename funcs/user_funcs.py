@@ -1,6 +1,8 @@
 from data import db_session
 from data.users import User
 from data.games import Game
+from random import randint
+from flask import redirect
 
 
 def is_user_found(user_id):
@@ -117,3 +119,21 @@ def get_where_user_sitting(user_id):
         if str(user_id) in game.players_ids.split() and game.winner == 0:
             return game.id
     return None
+
+
+def get_how_plus(user_id, winner):
+    if user_id == winner:
+        return randint(18, 22)
+    else:
+        return randint(-12, -8)
+
+
+def increase_rating(user_id, winner_id):
+    if not is_user_found(user_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    how_plus = get_how_plus(user_id, winner_id)
+    user.rating = max(user.rating + get_how_plus(user_id, winner_id), 0)
+    session.commit()
+    session.close()

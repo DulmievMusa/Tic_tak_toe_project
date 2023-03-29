@@ -13,6 +13,8 @@
                                     window.location.href = '/';}
                                 else if (request.response.response !== "end_game") {
                                     $("#table_div").load("/api/get_table_matrix");};
+                                if (request.response.response === "end_game") {
+                                    do_all();};
                                 };
                         };
                         request.open('GET', '/api/cell_pressed/' + index, true);
@@ -27,7 +29,8 @@
                                 if (request.response.is_matrix_change === "True") {
                                     $("#table_div").load("/api/get_table_matrix");}
                                 if (request.response.is_game_finished === "end_game") {
-                                    clearInterval(window.load);}
+                                    clearInterval(window.load);
+                                    document.getElementById("opponent_rating").innerHTML = '<h2 style="' + request.response.opponent_style + '">' + request.response.opponent_rating + "</h2>";}
                                 if (request.response.is_game_finished === "error") {
                                     window.location.href = '/';}
                                 document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
@@ -52,9 +55,10 @@
             padding-right: 3%;
             margin-left: auto;
             margin-right: auto;"
-        id="opponent_div">{% for item in opponent %}
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{item}}</h2>
-    {% endfor %}
+        id="opponent_div">
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[0]}}</h2>
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[1]}}</h2>
+        <div id="opponent_rating"><h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[2]}}</h2></div>
 </div>
 <div style="display: flex;
             justify-content: center;
@@ -62,7 +66,7 @@
             margin-bottom: 50px;
             margin-left: auto;
             margin-right: auto;">
-    <div id="end_game" style="font-family: Arial, Helvetica, sans-serif;
+    <div id="message_div" style="font-family: Arial, Helvetica, sans-serif;
                              margin-right: 2%;"></div>
     <div id="table_div"></div>
     <div id="timer" style="font-family: Arial, Helvetica, sans-serif;
@@ -78,9 +82,11 @@
             padding-right: 3%;
             margin-left: auto;
             margin-right: auto;"
-        id="user_div">{% for item in user %}
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{item}}</h2>
-    {% endfor %}
+        id="user_div">
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[0]}}</h2>
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[1]}}</h2>
+        <div id="user_rating"><h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[2]}}</h2></div>
+
 </div>
 </div>
 </body>
