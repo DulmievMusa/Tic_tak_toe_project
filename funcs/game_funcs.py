@@ -290,7 +290,8 @@ def get_who_win(game_id):
         return o_winner
 
     if game['count'] == 9:
-        return -1
+        print('draw')
+        return 'draw'
 
     return 'nothing happened'
 
@@ -310,12 +311,15 @@ def end_game(game_id, winner, ending_seconds):
         return
     session['playing'] = False
     session['ending_seconds'] = ending_seconds
-    if not is_winner_in_game(game_id):
-        increase_rating(winner, winner)
-        increase_rating(get_opponent_id(game_id, winner), winner)
+    if winner != -1:
+        if not is_winner_in_game(game_id):
+            increase_rating(winner, winner)
+            increase_rating(get_opponent_id(game_id, winner), winner)
+    elif winner == -1:
+        pass
+    print('set_winner', winner)
     set_winner(winner, game_id)
     session['winner'] = winner
-    print('end_game_func')
 
 
 def get_last_time(game_id):
@@ -391,3 +395,12 @@ def is_winner_in_game(game_id):
         return False
     else:
         return True
+
+
+def get_just_winner(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    return game.winner

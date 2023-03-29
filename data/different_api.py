@@ -70,10 +70,14 @@ def cell_pressed_api(index):
         update_matrix(game_id, matrix)
     increase_count(game_id)
     winner = get_who_win(game_id)
+    print('cell_pressed', winner)
+    if winner == 'draw':
+        return jsonify({'response': 'draw'})
     if winner != 'nothing happened':
         return jsonify({'response': 'end_game'})
     else:
-        change_who_move(game_id)
+        if winner != -1 or winner != 'draw':
+            change_who_move(game_id)
     return jsonify({'response': 'success'})
 
 
@@ -105,9 +109,10 @@ def do_all_game():
     game_id = session['game_id']
     seconds = str(get_timer())
     slovar['seconds'] = seconds
-    if seconds == 'loss':
+    if seconds == 'loss' and get_just_winner(game_id) == 0:
         slovar['is_game_finished'] = 'end_game'
         winner = get_who_win_if_timer_end(game_id)
+        print('end_game_timer')
         end_game(game_id, winner, seconds)
 
     if session['str_matrix'] != get_str_matrix(game_id):
@@ -117,13 +122,36 @@ def do_all_game():
         slovar['is_matrix_change'] = 'False'
 
     winner = get_who_win(game_id)
-    if winner != 'nothing happened':
+    if winner != 'nothing happened' and winner != 'draw' and winner != -1:
+        print('lol', winner)
         slovar['is_game_finished'] = 'end_game'
+        print('end_game_win')
         end_game(game_id, winner, seconds)
         opponent_plus, user_plus = get_rating_pluses(game_id)
-        slovar['opponent_rating'] = str(session['old_opponent_rating']) + ' ' + opponent_plus
+        if '+' in opponent_plus:
+            opponent_plus_style = 'color: #9BBC7E;'
+        else:
+            opponent_plus_style = 'color: #93261D;'
+        slovar['opponent_span'] = f'<span style="{opponent_plus_style}">{opponent_plus}</span>'
+        slovar['opponent_rating'] = str(session['old_opponent_rating']) + ' '
+
+        if '+' in user_plus:
+            user_plus_style = 'color: #9BBC7E;'
+        else:
+            user_plus_style = 'color: #93261D;'
+        slovar['user_span'] = f'<span style="{user_plus_style}">{user_plus}</span>'
+        slovar['user_rating'] = str(session['old_user_rating']) + ' '
+
     elif winner == 'nothing happened':
         slovar['is_game_finished'] = 'nothing happened'
+
+    if winner == 'draw' or winner == -1:
+        slovar['is_game_finished'] = 'draw'
+        slovar['is_draw'] = 'True'
+        print('end_game_draw', slovar['is_game_finished'])
+        end_game(game_id, -1, seconds)
+    else:
+        slovar['is_draw'] = 'False'
 
     slovar['timer_style'] = get_timer_style(game_id, current_user.id)
 

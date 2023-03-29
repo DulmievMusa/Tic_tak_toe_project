@@ -39,7 +39,7 @@ def get_game_where_user_play(user_id):
     games = session.query(Game).all()
     session.close()
     for game in games:
-        if str(user_id) in game.players_ids.split() and game.winner == 0:
+        if (str(user_id) in game.players_ids.split() and game.winner == 0):
             return game.id
     return None
 
@@ -126,16 +126,16 @@ def get_where_user_sitting(user_id):
     games = session.query(Game).all()
     session.close()
     for game in games:
-        if str(user_id) in game.players_ids.split() and game.winner == 0:
+        if (str(user_id) in game.players_ids.split() and game.winner == 0):
             return game.id
     return None
 
 
 def get_how_plus(user_id, winner):
     if user_id == winner:
-        return randint(18, 22)
+        return randint(19, 21)
     else:
-        return randint(-12, -8)
+        return randint(-11, -9)
 
 
 def increase_rating(user_id, winner_id):
@@ -162,4 +162,4 @@ def get_rating_pluses(game_id):
         user_plus = '+ ' + str(user_plus)
     elif user_plus < 0:
         user_plus = '- ' + str(abs(user_plus))
-    return (str(opponent_plus), str(user_plus))
+    return (opponent_plus, user_plus)

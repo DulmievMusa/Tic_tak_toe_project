@@ -14,6 +14,10 @@
                                 else if (request.response.response !== "end_game") {
                                     $("#table_div").load("/api/get_table_matrix");};
                                 if (request.response.response === "end_game") {
+                                    clearInterval(window.load);
+                                    do_all();};
+                                if (request.response.response === "draw") {
+                                    clearInterval(window.load);
                                     do_all();};
                                 };
                         };
@@ -30,7 +34,10 @@
                                     $("#table_div").load("/api/get_table_matrix");}
                                 if (request.response.is_game_finished === "end_game") {
                                     clearInterval(window.load);
-                                    document.getElementById("opponent_rating").innerHTML = '<h2 style="' + request.response.opponent_style + '">' + request.response.opponent_rating + "</h2>";}
+                                    document.getElementById("opponent_rating").innerHTML = '<h2>' + request.response.opponent_rating + request.response.opponent_span + "</h2>";
+                                    document.getElementById("user_rating").innerHTML = '<h2>' + request.response.user_rating + request.response.user_span + "</h2>";}
+                                if (request.response.is_game_finished === "draw") {
+                                    clearInterval(window.load);}
                                 if (request.response.is_game_finished === "error") {
                                     window.location.href = '/';}
                                 document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
@@ -86,7 +93,8 @@
         id="user_div">
         <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[0]}}</h2>
         <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[1]}}</h2>
-        <div id="user_rating"><h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[2]}}</h2></div>
+        <div id="user_rating" style="font-family: Arial, Helvetica, sans-serif;">
+            <h2>{{user[2]}}</h2></div>
 
 </div>
 </div>
