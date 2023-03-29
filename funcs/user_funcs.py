@@ -2,7 +2,8 @@ from data import db_session
 from data.users import User
 from data.games import Game
 from random import randint
-from flask import redirect
+from flask import redirect, session
+from flask_login import current_user
 
 
 def is_user_found(user_id):
@@ -12,6 +13,15 @@ def is_user_found(user_id):
     if not user:
         return False
     return True
+
+
+def get_opponent_idik(game_id, user_id):
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    session.close()
+    players = game.players_ids.split()
+    players.remove(str(user_id))
+    return players[0]
 
 
 def is_user_in_game(user_id):
@@ -137,3 +147,19 @@ def increase_rating(user_id, winner_id):
     user.rating = max(user.rating + get_how_plus(user_id, winner_id), 0)
     session.commit()
     session.close()
+
+
+def get_rating_pluses(game_id):
+    opponent_plus = get_user(get_opponent_idik(game_id, current_user.id))['user']['rating'] - session[
+        'old_opponent_rating']
+    if opponent_plus > 0:
+        opponent_plus = '+ ' + str(opponent_plus)
+    elif opponent_plus < 0:
+        opponent_plus = '- ' + str(abs(opponent_plus))
+    user_plus = get_user(current_user.id)['user']['rating'] - session[
+        'old_user_rating']
+    if user_plus > 0:
+        user_plus = '+ ' + str(user_plus)
+    elif user_plus < 0:
+        user_plus = '- ' + str(abs(user_plus))
+    return (str(opponent_plus), str(user_plus))

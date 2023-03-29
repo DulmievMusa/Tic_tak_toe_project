@@ -49,6 +49,8 @@ def test_reload():
 @app.route('/')
 def index():
     session['ending_seconds'] = -1
+    session['old_opponent_rating'] = -1
+    session['old_user_rating'] = -1
     return render_template('main_page.html', current_user=current_user)
 
 
@@ -64,6 +66,9 @@ def game():
             if game_id is None:
                 return redirect('/')
         session['game_id'] = game_id
+        if session['old_opponent_rating'] == -1 and session['old_user_rating'] == -1:
+            session['old_opponent_rating'] = get_user(get_opponent_id(game_id, current_user.id))['user']['rating']
+            session['old_user_rating'] = get_user(current_user.id)['user']['rating']
         opponent_id = get_opponent_id(session['game_id'], current_user.id)
         opponent_list = get_short_user_list(opponent_id)
         user_list = get_short_user_list(current_user.id)
@@ -77,7 +82,6 @@ def game():
 @app.route('/game_search')
 @login_required
 def game_search():
-    session['winner'] = 0
     init_or_join_game(current_user.id)
     return render_template('game_search_page.html')
 

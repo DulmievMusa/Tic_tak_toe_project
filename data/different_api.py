@@ -120,7 +120,8 @@ def do_all_game():
     if winner != 'nothing happened':
         slovar['is_game_finished'] = 'end_game'
         end_game(game_id, winner, seconds)
-        slovar['opponent_rating'] = str(get_user(get_opponent_id(game_id, current_user.id))['user']['rating'])
+        opponent_plus, user_plus = get_rating_pluses(game_id)
+        slovar['opponent_rating'] = str(session['old_opponent_rating']) + ' ' + opponent_plus
     elif winner == 'nothing happened':
         slovar['is_game_finished'] = 'nothing happened'
 

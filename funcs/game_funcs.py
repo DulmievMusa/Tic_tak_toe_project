@@ -110,6 +110,7 @@ def init_or_join_game(user_id):
         create_game(user_id)
         new_game_id = get_game_where_user_play(user_id)
         session['game_id'] = new_game_id
+        session['winner'] = 0
     else:
         if not is_user_in_game(user_id):
             free_game_id = get_free_game_id()
@@ -119,7 +120,10 @@ def init_or_join_game(user_id):
             who_move_id = choice_who_move(user_id, opponent_id)
             set_who_move(free_game_id, who_move_id)
             set_last_time(free_game_id)
+            session['winner'] = 0
 
+    session['old_opponent_rt'] = -1
+    session['old_user_rt'] = -1
     session['playing'] = True
     session['game_id'] = get_game_where_user_play(user_id)
 
