@@ -153,7 +153,13 @@ def do_all_game():
         end_game(game_id, -1, seconds)
     else:
         slovar['is_draw'] = 'False'
-
     slovar['timer_style'] = get_timer_style(game_id, current_user.id)
+    slovar['message'] = 'nothing'
+    if str(winner) == str(current_user.id):
+        slovar['message'] = 'Congratulations! You won the game!'
+    elif winner == -1 or winner == 'draw':
+        slovar['message'] = "It's a draw"
+    elif str(winner) == str(get_opponent_id(game_id, current_user.id)):
+        slovar['message'] = 'Loss'
 
     return jsonify(slovar)

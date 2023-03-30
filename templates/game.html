@@ -41,6 +41,8 @@
                                 if (request.response.is_game_finished === "error") {
                                     window.location.href = '/';}
                                 document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
+                                if (request.response.message !== "nothing") {
+                                document.getElementById("message_div").innerHTML = '<h1 style="background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 5px;">' + request.response.message + "</h1>";};
                                 };
                         };
                         request.open('GET', '/api/do_all_game', true);
@@ -51,6 +53,8 @@
     </script>
 </head>
 <body style="background: url(../static/images/backgrounds/tree1.jpg);">
+<div style="button_back"></div>
+<
 <div style="margin-top: 3%;">
 <div style="display: flex;
             justify-content: space-between;

@@ -382,7 +382,7 @@ def get_timer_style(game_id, user_id):
         timer_style.append('background-color: #fff')
     else:
         timer_style.append('background-color: #A9A9A9')
-    timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px'])
+    timer_style.extend(['border: 6px solid #ebdddd', 'border-radius: 10px 10px 10px 10px', 'padding: 5px;'])
     timer_style_st = ';'.join(timer_style) + ';'
     return timer_style_st
 
