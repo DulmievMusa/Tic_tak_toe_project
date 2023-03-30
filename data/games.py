@@ -19,3 +19,4 @@ class Game(SqlAlchemyBase, SerializerMixin):
     start_time = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
     winner = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    players_in_game = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)

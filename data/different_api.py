@@ -68,17 +68,18 @@ def cell_pressed_api(index):
             matrix[index] = '0'
         matrix = ''.join(matrix)
         update_matrix(game_id, matrix)
-    increase_count(game_id)
-    winner = get_who_win(game_id)
-    print('cell_pressed', winner)
-    if winner == 'draw':
-        return jsonify({'response': 'draw'})
-    if winner != 'nothing happened':
-        return jsonify({'response': 'end_game'})
-    else:
-        if winner != -1 or winner != 'draw':
-            change_who_move(game_id)
-    return jsonify({'response': 'success'})
+        increase_count(game_id)
+        winner = get_who_win(game_id)
+        print('cell_pressed', winner)
+        if winner == 'draw':
+            return jsonify({'response': 'draw'})
+        if winner != 'nothing happened':
+            return jsonify({'response': 'end_game'})
+        else:
+            if winner != -1 or winner != 'draw':
+                change_who_move(game_id)
+        return jsonify({'response': 'success'})
+    return jsonify({'response': 'not_move'})
 
 
 # @blueprint.route('/api/is_game_finished')

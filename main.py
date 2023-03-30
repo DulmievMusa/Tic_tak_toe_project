@@ -48,34 +48,42 @@ def test_reload():
 
 @app.route('/')
 def index():
+    game_id = get_game_where_user_play(current_user.id)
+    if game_id is None:
+        remove_from_players_in_game(session['game_id'])
     session['ending_seconds'] = -1
     session['old_opponent_rating'] = -1
     session['old_user_rating'] = -1
+    print(get_game_where_user_play(current_user.id), session['game_id'])
     return render_template('main_page.html', current_user=current_user)
 
 
 @app.route('/game')
 @login_required
 def game():
-    session['playing'] = session.get('playing', False)
-    if session['playing'] is True:
-        game_id = get_game_where_user_play(current_user.id)
-        print('first', game_id)
-    else:
-        game_id = session.get('game_id', None)
-        print('Not playing', game_id)
-        if game_id is None:
-            return redirect('/')
-    session['game_id'] = game_id
-    if session['old_opponent_rating'] == -1 and session['old_user_rating'] == -1:
-        session['old_opponent_rating'] = get_user(get_opponent_id(game_id, current_user.id))['user']['rating']
-        session['old_user_rating'] = get_user(current_user.id)['user']['rating']
-    opponent_id = get_opponent_id(session['game_id'], current_user.id)
-    print('op', opponent_id, 'sesgid', session['game_id'])
-    opponent_list = get_short_user_list(opponent_id)
-    user_list = get_short_user_list(current_user.id)
-    session['str_matrix'] = ''
-    return render_template('game.html', opponent=opponent_list, user=user_list)
+    try:
+        session['playing'] = session.get('playing', False)
+        if session['playing'] is True:
+            game_id = get_game_where_user_play(current_user.id)
+            print('first', game_id)
+        else:
+            game_id = session.get('game_id', None)
+            print('Not playing', game_id)
+            if game_id is None:
+                return redirect('/')
+        session['game_id'] = game_id
+        if session['old_opponent_rating'] == -1 and session['old_user_rating'] == -1:
+            session['old_opponent_rating'] = get_user(get_opponent_id(game_id, current_user.id))['user']['rating']
+            session['old_user_rating'] = get_user(current_user.id)['user']['rating']
+        opponent_id = get_opponent_id(session['game_id'], current_user.id)
+        print('op', opponent_id, 'sesgid', session['game_id'])
+        opponent_list = get_short_user_list(opponent_id)
+        user_list = get_short_user_list(current_user.id)
+        session['str_matrix'] = ''
+        return render_template('game.html', opponent=opponent_list, user=user_list)
+    except Exception as e:
+        print(e)
+        return redirect('/')
 
 
 @app.route('/game_search')

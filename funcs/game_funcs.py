@@ -68,7 +68,8 @@ def create_game(user_id):
         who_move=0,
         matrix='YYYYYYYYY',
         count=0,
-        winner=0)
+        winner=0,
+        players_in_game=1)
     session.add(game)
     session.commit()
     session.close()
@@ -116,6 +117,7 @@ def init_or_join_game(user_id):
             free_game_id = get_free_game_id()
             session['game_id'] = free_game_id
             add_user_id_to_game(free_game_id, user_id)
+            add_user_to_players_in_game(free_game_id)
             opponent_id = get_opponent_id(free_game_id, user_id)
             who_move_id = choice_who_move(user_id, opponent_id)
             set_who_move(free_game_id, who_move_id)
@@ -404,3 +406,26 @@ def get_just_winner(game_id):
     game = session.query(Game).get(game_id)
     session.close()
     return game.winner
+
+
+def add_user_to_players_in_game(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    game.players_in_game = 2
+    session.commit()
+    session.close()
+
+
+def remove_from_players_in_game(game_id):
+    if not is_game_found(game_id):
+        return {'error': 404}
+    session = db_session.create_session()
+    game = session.query(Game).get(game_id)
+    if game.players_in_game == 2:
+        game.players_in_game = 1
+    elif game.players_in_game == 1:
+        session.delete(game)
+    session.commit()
+    session.close()
