@@ -48,9 +48,10 @@ def test_reload():
 
 @app.route('/')
 def index():
+    delete_searching_game()
     game_id = get_game_where_user_play(current_user.id)
     sp = []
-    while True:
+    while True:  # This is necessary in order to remove games that the user does not play
         last_game_id = get_game_where_user_played(current_user.id)
         if last_game_id is not None and last_game_id not in sp:
             sp.append(last_game_id)

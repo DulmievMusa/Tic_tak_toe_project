@@ -431,3 +431,15 @@ def remove_from_players_in_game(game_id):
         session.delete(game)
     session.commit()
     session.close()
+
+
+def delete_searching_game():
+    session = db_session.create_session()
+    games = session.query(Game).all()
+    for game in games:
+        if len(game.players_ids.split()) == 1 and str(current_user.id) in game.players_ids.split() and game.winner == 0:
+            session.delete(game)
+            session.commit()
+            session.close()
+            return 'success'
+    return 'nothing'
