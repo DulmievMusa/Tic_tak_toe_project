@@ -26,6 +26,18 @@
                         request.send();
                         };
 
+            function play_again() {
+                        var request = new XMLHttpRequest();
+                        request.onreadystatechange = function() {
+                            if (request.readyState == 4 && request.status == 200) {
+                                window.location.href = '/game_search';
+                                };
+                        };
+                        request.open('GET', '/api/play_again', true);
+                        request.responseType = 'json';
+                        request.send();
+                        };
+
             function do_all() {
                 var request = new XMLHttpRequest();
                         request.onreadystatechange = function() {
@@ -42,7 +54,7 @@
                                     window.location.href = '/';}
                                 document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
                                 if (request.response.message !== "nothing") {
-                                document.getElementById("message_div").innerHTML = '<h1 style="text-align: center;background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 10px;">' + request.response.message + "</h1>" + '<div style="display: flex;justify-content: center;"><button style="font-family: Arial, Helvetica, sans-serif;width: 100px;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button></div>';};
+                                document.getElementById("message_div").innerHTML = '<h1 style="text-align: center;background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 10px;">' + request.response.message + "</h1>" + '<div style="display: flex;justify-content: center;"><button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button><button style="font-family: Arial, Helvetica, sans-serif;border: 6px solid #438a4a;border-radius: 10px 10px 10px 10px;padding: 10px;margin-left: 20px;" ' + 'onclick="' + "play_again();" + '">' + '<h1>Play again!</h1></button></div>';};
                                 };
                         };
                         request.open('GET', '/api/do_all_game', true);

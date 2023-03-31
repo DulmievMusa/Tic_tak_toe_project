@@ -183,3 +183,4 @@ def play_again_api():
     session['ending_seconds'] = -1
     session['old_opponent_rating'] = -1
     session['old_user_rating'] = -1
+    return jsonify({'response': 'success'})
