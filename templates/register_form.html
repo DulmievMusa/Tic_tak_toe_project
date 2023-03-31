@@ -1,58 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="lol">
-    <h2 class="xd">Register Form</h2>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(class="form-control form-control-sm", type="email") }}
-            {% for error in form.email.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control form-control-sm", type="password") }}
-            {% for error in form.password.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password_again.label }}<br>
-            {{ form.password_again(class="form-control form-control-sm", type="password") }}
-            {% for error in form.password_again.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.name.label }}<br>
-            {{ form.name(class="form-control form-control-sm") }}
-            {% for error in form.name.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.country.label }}<br>
-            {{ form.country(class="form-control form-control-sm") }}
-            {% for error in form.country.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <p>{{message}}</p>
-    </form>
+<div style="width: 600px; margin: auto; margin-top: 80px; height: 700px; background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;padding:10px;">
+    <div>
+        <h2 class="xd">Register Form</h2>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email(class="form-control form-control-sm", type="email") }}
+                {% for error in form.email.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password.label }}<br>
+                {{ form.password(class="form-control form-control-sm", type="password") }}
+                {% for error in form.password.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password_again.label }}<br>
+                {{ form.password_again(class="form-control form-control-sm", type="password") }}
+                {% for error in form.password_again.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.name.label }}<br>
+                {{ form.name(class="form-control form-control-sm") }}
+                {% for error in form.name.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.country.label }}<br>
+                {{ form.country(class="form-control form-control-sm") }}
+                {% for error in form.country.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            <p>{{message}}</p>
+        </form>
+    </div>
 </div>
 {% endblock %}
 
