@@ -69,7 +69,7 @@ def create_game(user_id):
         matrix='YYYYYYYYY',
         count=0,
         winner=0,
-        players_in_game=1)
+        players_in_game=str(current_user.id))
     session.add(game)
     session.commit()
     session.close()
@@ -413,7 +413,7 @@ def add_user_to_players_in_game(game_id):
         return {'error': 404}
     session = db_session.create_session()
     game = session.query(Game).get(game_id)
-    game.players_in_game = 2
+    game.players_in_game = game.players_in_game + ' ' + str(current_user.id)
     session.commit()
     session.close()
 
@@ -423,9 +423,11 @@ def remove_from_players_in_game(game_id):
         return {'error': 404}
     session = db_session.create_session()
     game = session.query(Game).get(game_id)
-    if game.players_in_game == 2:
-        game.players_in_game = 1
-    elif game.players_in_game == 1:
+    if len(game.players_in_game.split()) == 2:
+        sp = game.players_in_game.split()
+        sp.remove(str(current_user.id))
+        game.players_in_game = sp[0]
+    elif len(game.players_in_game.split()) == 1 and str(current_user.id) in game.players_in_game.split():
         session.delete(game)
     session.commit()
     session.close()
