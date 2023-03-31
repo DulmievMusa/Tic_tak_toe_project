@@ -163,3 +163,23 @@ def do_all_game():
         slovar['message'] = 'Loss'
 
     return jsonify(slovar)
+
+
+@blueprint.route('/api/play_again')
+def play_again_api():
+    game_id = get_game_where_user_play(current_user.id)
+    sp = []
+    while True:
+        last_game_id = get_game_where_user_played(current_user.id)
+        if last_game_id is not None and last_game_id not in sp:
+            sp.append(last_game_id)
+            remove_from_players_in_game(last_game_id)
+        else:
+            break
+    if game_id is None:
+        ga_id = session.get('game_id', False)
+        if ga_id and ga_id not in sp:
+            remove_from_players_in_game(session['game_id'])
+    session['ending_seconds'] = -1
+    session['old_opponent_rating'] = -1
+    session['old_user_rating'] = -1
