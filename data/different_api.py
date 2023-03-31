@@ -129,17 +129,21 @@ def do_all_game():
         print('end_game_win')
         end_game(game_id, winner, seconds)
         opponent_plus, user_plus = get_rating_pluses(game_id)
-        if '+' in opponent_plus:
+        if '+' in str(opponent_plus):
             opponent_plus_style = 'color: #9BBC7E;'
         else:
             opponent_plus_style = 'color: #93261D;'
+            if str(opponent_plus) == '0':
+                opponent_plus = ''
         slovar['opponent_span'] = f'<span style="{opponent_plus_style}">{opponent_plus}</span>'
         slovar['opponent_rating'] = str(session['old_opponent_rating']) + ' '
 
-        if '+' in user_plus:
+        if '+' in str(user_plus):
             user_plus_style = 'color: #9BBC7E;'
         else:
             user_plus_style = 'color: #93261D;'
+            if str(user_plus) == '0':
+                user_plus = ''
         slovar['user_span'] = f'<span style="{user_plus_style}">{user_plus}</span>'
         slovar['user_rating'] = str(session['old_user_rating']) + ' '
 
