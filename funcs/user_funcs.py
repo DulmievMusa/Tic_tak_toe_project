@@ -163,3 +163,13 @@ def get_rating_pluses(game_id):
     elif user_plus < 0:
         user_plus = '- ' + str(abs(user_plus))
     return (opponent_plus, user_plus)
+
+
+def get_game_where_user_played(user_id):
+    session = db_session.create_session()
+    games = session.query(Game).all()
+    session.close()
+    for game in games:
+        if (str(user_id) in game.players_ids.split() and game.winner != 0):
+            return game.id
+    return None

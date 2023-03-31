@@ -4,4 +4,4 @@ from data import db_session
 from flask import url_for, Flask
 
 db_session.global_init("db/main.db")
-print(get_who_win(2))
+print('<button style="background: transparent;border: none !important;" ' + 'onclick="' + "document.location='/';" + '">' + '<img src="../static/images/buttons/back_button.png" style="width: 100px;"></button>')

@@ -49,12 +49,19 @@ def test_reload():
 @app.route('/')
 def index():
     game_id = get_game_where_user_play(current_user.id)
+    while True:
+        last_game_id = get_game_where_user_played(current_user.id)
+        if last_game_id is not None:
+            remove_from_players_in_game(last_game_id)
+        else:
+            break
     if game_id is None:
-        remove_from_players_in_game(session['game_id'])
+        ga_id = session.get('game_id', False)
+        if ga_id:
+            remove_from_players_in_game(session['game_id'])
     session['ending_seconds'] = -1
     session['old_opponent_rating'] = -1
     session['old_user_rating'] = -1
-    print(get_game_where_user_play(current_user.id), session['game_id'])
     return render_template('main_page.html', current_user=current_user)
 
 
