@@ -1,27 +1,42 @@
 <html>
 <head>
-<title>Example</title>
+<title>Search game</title>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script>
-    function do_all() {
-                var request = new XMLHttpRequest();
+    window.num = 0;
+    var request = new XMLHttpRequest();
                 request.onreadystatechange = function() {
                     if (request.readyState == 4 && request.status == 200) {
                         if (request.response.response === "True") {
                             window.location.href = '/game';}
                         };
                 };
-                request.open('GET', '/api/is_game_full', true);
-                request.responseType = 'json';
-                request.send();
-                $("#loading").load("/api/loading_count");
 
+    request.responseType = 'json';
+    function do_all() {
+                window.num = window.num + 1
+                if (window.num == 4) {
+                    window.num = 1};
+                document.getElementById("loading").innerHTML = '<h1>' + 'Searching player' + '.'.repeat(window.num) + "</h1>";
+                request.open('GET', '/api/is_game_full', true);
+                request.send();
             };
     setInterval("do_all();",1000);
 </script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous">
 </head>
-<body>
-<div id="loading"></div>
-<p>test</p>
+<body style="background-color: #7f6546;">
+<nav class="navbar navbar-light" style="background-color: #bd9c77;">
+    <H1>Tic Tac Toe</H1>
+</nav>
+<div style="width: 400px; margin: auto; margin-top: 7vh; height: 300px; background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;padding:10px;">
+    <div style="width: 330px; height: 200px; margin: auto; margin-top: 100px;">
+        <div id="loading"></div>
+    </div>
+</div>
 </body>
 </html>

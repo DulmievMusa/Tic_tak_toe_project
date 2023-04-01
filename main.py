@@ -48,8 +48,8 @@ def test_reload():
 
 @app.route('/')
 def index():
-    delete_searching_game()
     if current_user.is_authenticated:
+        delete_searching_game()
         game_id = get_game_where_user_play(current_user.id)
         sp = []
         while True:  # This is necessary in order to remove games that the user does not play
@@ -87,7 +87,6 @@ def game():
             session['old_opponent_rating'] = get_user(get_opponent_id(game_id, current_user.id))['user']['rating']
             session['old_user_rating'] = get_user(current_user.id)['user']['rating']
         opponent_id = get_opponent_id(session['game_id'], current_user.id)
-        print('op', opponent_id, 'sesgid', session['game_id'])
         opponent_list = get_short_user_list(opponent_id)
         user_list = get_short_user_list(current_user.id)
         session['str_matrix'] = ''
