@@ -105,7 +105,6 @@ def add_user(args):
         email=args['email'],
     )
     session.add(user)
-    user.image_name = user.email
     user.set_password(args['password'])
     session.commit()
     session.close()
