@@ -6,6 +6,7 @@ from flask_restful import reqparse, abort, Api, Resource
 from data.users import User
 from funcs.user_funcs import *
 from funcs.game_funcs import *
+from funcs.different_funcs import *
 # from data import users_resources
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
@@ -107,6 +108,12 @@ def game_search():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        if len(form.password.data) < 5:
+            return render_template('register_form.html', title='Registration',
+                                   form=form, message="Password must be 5 characters or more")
+        if not is_lat_letters_all(form.country.data):
+            return render_template('register_form.html', title='Registration',
+                                   form=form, message="The country must be only from Latin letters")
         if form.password.data != form.password_again.data:
             return render_template('register_form.html', title='Registration',
                                    form=form, message="Passwords isn't same")
@@ -120,7 +127,7 @@ def register():
         add_user({
                  'name': form.name.data,
                  'rating': 50,
-                 'country': form.country.data,
+                 'country': form.country.data.capitalize(),
                  'email': form.email.data,
                  'password': form.password.data})
         db_sess = db_session.create_session()
