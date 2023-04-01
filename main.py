@@ -123,6 +123,12 @@ def register():
                  'country': form.country.data,
                  'email': form.email.data,
                  'password': form.password.data})
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        db_sess.close()
+        login_user(user, remember=True)
+        session['playing'] = False
+        session['game_id'] = -1
         return redirect('/')
     return render_template('register_form.html', title='Registration', form=form)
 
