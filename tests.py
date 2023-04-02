@@ -4,4 +4,4 @@ from data import db_session
 from flask import url_for, Flask
 from funcs.different_funcs import is_lat_letters_all
 
-print(is_lat_letters_all('Gogland'))
+print('<button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button>')

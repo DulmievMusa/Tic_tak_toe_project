@@ -3,7 +3,7 @@
 <title>Search game</title>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script>
-    window.num = 0;
+    window.num = 1;
     var request = new XMLHttpRequest();
                 request.onreadystatechange = function() {
                     if (request.readyState == 4 && request.status == 200) {
@@ -32,10 +32,11 @@
 <body style="background-color: #7f6546;">
 <nav class="navbar navbar-light" style="background-color: #bd9c77;">
     <H1>Tic Tac Toe</H1>
+    <button style="padding: 10px;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" onclick="document.location='/';"><h1>Back</h1></button>
 </nav>
 <div style="width: 400px; margin: auto; margin-top: 7vh; height: 300px; background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;padding:10px;">
     <div style="width: 330px; height: 200px; margin: auto; margin-top: 100px;">
-        <div id="loading"></div>
+        <div id="loading"><h1>Searching player.</h1></div>
     </div>
 </div>
 </body>
