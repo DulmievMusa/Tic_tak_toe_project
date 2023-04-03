@@ -107,13 +107,13 @@ def get_loading_frame():
 
 def init_or_join_game(user_id):
     if not is_user_in_game(user_id) and get_free_game_id() is None \
-            and get_game_where_user_play(user_id) is None:
+            and get_game_where_user_play(user_id) is None:  # create new game
         create_game(user_id)
         new_game_id = get_game_where_user_play(user_id)
         session['game_id'] = new_game_id
         session['winner'] = 0
     else:
-        if not is_user_in_game(user_id):
+        if not is_user_in_game(user_id):  # join game
             free_game_id = get_free_game_id()
             session['game_id'] = free_game_id
             add_user_id_to_game(free_game_id, user_id)

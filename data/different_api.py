@@ -47,7 +47,7 @@ def is_matrix_change_api():
 
 
 @blueprint.route('/api/cell_pressed/<int:index>')
-def cell_pressed_api(index):
+def cell_pressed_api(index):  # player's move
     if not session.get('game_id', ''):
         return jsonify({'response': 'error'})
     game_id = session['game_id']
@@ -101,21 +101,21 @@ def do_all_game():
     if not session.get('game_id', ''):
         return jsonify({'error': 404})
     game_id = session['game_id']
-    seconds = str(get_timer())
+    seconds = str(get_timer())  # get timer
     slovar['seconds'] = seconds
-    if seconds == 'loss' and get_just_winner(game_id) == 0:
+    if seconds == 'loss' and get_just_winner(game_id) == 0:  # if timer loss
         slovar['is_game_finished'] = 'end_game'
         winner = get_who_win_if_timer_end(game_id)
         end_game(game_id, winner, seconds)
 
-    if session['str_matrix'] != get_str_matrix(game_id):
+    if session['str_matrix'] != get_str_matrix(game_id):  # if matrix changed
         session['str_matrix'] = get_str_matrix(game_id)
         slovar['is_matrix_change'] = 'True'
     else:
         slovar['is_matrix_change'] = 'False'
 
     winner = get_who_win(game_id)
-    if winner != 'nothing happened' and winner != 'draw' and winner != -1:
+    if winner != 'nothing happened' and winner != 'draw' and winner != -1:  # if winner
         slovar['is_game_finished'] = 'end_game'
         end_game(game_id, winner, seconds)
         opponent_plus, user_plus = get_rating_pluses(game_id)
@@ -125,7 +125,7 @@ def do_all_game():
             opponent_plus_style = 'color: #93261D;'
             if str(opponent_plus) == '0':
                 opponent_plus = ''
-        slovar['opponent_span'] = f'<span style="{opponent_plus_style}">{opponent_plus}</span>'
+        slovar['opponent_span'] = f'<span style="{opponent_plus_style}">{opponent_plus}</span>'  # opponent rating plus
         slovar['opponent_rating'] = str(session['old_opponent_rating']) + ' '
 
         if '+' in str(user_plus):
@@ -134,13 +134,13 @@ def do_all_game():
             user_plus_style = 'color: #93261D;'
             if str(user_plus) == '0':
                 user_plus = ''
-        slovar['user_span'] = f'<span style="{user_plus_style}">{user_plus}</span>'
+        slovar['user_span'] = f'<span style="{user_plus_style}">{user_plus}</span>'  # user rating plus
         slovar['user_rating'] = str(session['old_user_rating']) + ' '
 
     elif winner == 'nothing happened':
         slovar['is_game_finished'] = 'nothing happened'
 
-    if winner == 'draw' or winner == -1:
+    if winner == 'draw' or winner == -1:  # if draw
         slovar['is_game_finished'] = 'draw'
         slovar['is_draw'] = 'True'
         end_game(game_id, -1, seconds)
@@ -159,7 +159,7 @@ def do_all_game():
 
 
 @blueprint.route('/api/play_again')
-def play_again_api():
+def play_again_api():  # this is necessary in order to delete searching game from database
     game_id = get_game_where_user_play(current_user.id)
     sp = []
     while True:
