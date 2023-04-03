@@ -16,7 +16,7 @@ from data import different_api
 db_session.global_init("db/main.db")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'my_tic_tac_toe_key'
+app.config['SECRET_KEY'] = 'tIOWsl8TOJysg6DVtDDC0yC9rsw84cBpmy_tic_pglBhZ3sxqzoh5ffFnznvwDwt78KdYwQ_tac_toe_keyRlioN4f5uz2CFRsK0AijUvvQBdJM81HP'
 app.register_blueprint(different_api.blueprint)
 api = Api(app)
 # api.add_resource(users_resources.UserListResource, '/api/users')
@@ -32,19 +32,6 @@ def load_user(user_id):
     user = db_sess.query(User).get(user_id)
     db_sess.close()
     return user
-
-
-@app.route("/session_test")
-def session_test():
-    loading_count = session.get('loading_count', 0)
-    session['loading_count'] = loading_count + 1
-    return make_response(
-        f"Вы пришли на эту страницу {loading_count + 1} раз")
-
-
-@app.route('/test_reload')
-def test_reload():
-    return render_template('auto-reload_test.html', num=random.random(), need=True)
 
 
 @app.route('/')
