@@ -67,7 +67,7 @@ def index():
         session['ending_seconds'] = -1
         session['old_opponent_rating'] = -1
         session['old_user_rating'] = -1
-    return render_template('main_page.html', current_user=current_user)
+    return render_template('main_page.html', current_user=current_user, is_main_page=True)
 
 
 @app.route('/game')
@@ -111,9 +111,18 @@ def register():
         if len(form.password.data) < 5:
             return render_template('register_form.html', title='Registration',
                                    form=form, message="Password must be 5 characters or more")
+        if len(form.name.data) > 12:
+            return render_template('register_form.html', title='Registration',
+                                   form=form, message="Name must be less than 12 characters")
+        if len(form.country.data) > 15:
+            return render_template('register_form.html', title='Registration',
+                                   form=form, message="Country must be less than 15 characters")
         if not is_lat_letters_all(form.country.data):
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="The country must be only from Latin letters")
+                                   form=form, message="The country must be only from Latin letters and spaces")
+        if not is_lat_letters_all(form.name.data):
+            return render_template('register_form.html', title='Registration',
+                                   form=form, message="The name must be only from Latin letters and spaces")
         if form.password.data != form.password_again.data:
             return render_template('register_form.html', title='Registration',
                                    form=form, message="Passwords isn't same")
@@ -127,7 +136,7 @@ def register():
         add_user({
                  'name': form.name.data,
                  'rating': 50,
-                 'country': form.country.data.capitalize(),
+                 'country': form.country.data[0].upper() + form.country.data[1:],
                  'email': form.email.data,
                  'password': form.password.data})
         db_sess = db_session.create_session()

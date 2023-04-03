@@ -13,8 +13,11 @@
 <body style="background-color: #7f6546;">
     <nav class="navbar navbar-light" style="background-color: #bd9c77;">
         <H1>Tic Tac Toe</H1>
+        {% if not current_user.is_authenticated and not is_main_page%}
+        <button style="border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;height: 55px;" onclick="document.location='/';"><h2>Back</h2></button>
+        {% endif %}
         {% if current_user.is_authenticated %}
-            <div class="mx-auto" style="width: 380px;">
+            <div class="mx-auto">
                     <a class="navbar-brand" style="font-size: 30px;">{{ current_user.name }}</a>
                     <a class="navbar-brand" style="font-size: 28px;">Rating: {{ current_user.rating }}</a>
                     <a class="navbar-brand" style="font-size: 28px;">{{ current_user.country }}</a>
