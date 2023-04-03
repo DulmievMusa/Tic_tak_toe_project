@@ -14,12 +14,6 @@ blueprint = flask.Blueprint(
 )
 
 
-@blueprint.route('/api/loading_count')
-def get_loading_count_api():
-    loading_count = get_loading_frame()
-    return f'<img src="{url_for("static", filename=f"images/loading_sprites/loading_{loading_count + 1}.gif")}">'
-
-
 @blueprint.route('/api/is_game_full')
 def is_game_full_api():
     game_id = session.get('game_id', '')
@@ -70,7 +64,6 @@ def cell_pressed_api(index):
         update_matrix(game_id, matrix)
         increase_count(game_id)
         winner = get_who_win(game_id)
-        print('cell_pressed', winner)
         if winner == 'draw':
             return jsonify({'response': 'draw'})
         if winner != 'nothing happened':
@@ -113,7 +106,6 @@ def do_all_game():
     if seconds == 'loss' and get_just_winner(game_id) == 0:
         slovar['is_game_finished'] = 'end_game'
         winner = get_who_win_if_timer_end(game_id)
-        print('end_game_timer')
         end_game(game_id, winner, seconds)
 
     if session['str_matrix'] != get_str_matrix(game_id):
@@ -124,9 +116,7 @@ def do_all_game():
 
     winner = get_who_win(game_id)
     if winner != 'nothing happened' and winner != 'draw' and winner != -1:
-        print('lol', winner)
         slovar['is_game_finished'] = 'end_game'
-        print('end_game_win')
         end_game(game_id, winner, seconds)
         opponent_plus, user_plus = get_rating_pluses(game_id)
         if '+' in str(opponent_plus):
@@ -153,7 +143,6 @@ def do_all_game():
     if winner == 'draw' or winner == -1:
         slovar['is_game_finished'] = 'draw'
         slovar['is_draw'] = 'True'
-        print('end_game_draw', slovar['is_game_finished'])
         end_game(game_id, -1, seconds)
     else:
         slovar['is_draw'] = 'False'

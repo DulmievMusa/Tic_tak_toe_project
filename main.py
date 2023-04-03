@@ -64,10 +64,8 @@ def game():
         session['playing'] = session.get('playing', False)
         if session['playing'] is True:
             game_id = get_game_where_user_play(current_user.id)
-            print('first', game_id)
         else:
             game_id = session.get('game_id', None)
-            print('Not playing', game_id)
             if game_id is None:
                 return redirect('/')
         session['game_id'] = game_id
