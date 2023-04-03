@@ -1,13 +1,7 @@
-import random
-from requests import get, post, delete, put
-from flask import Flask, render_template, redirect, url_for, request, abort, make_response, jsonify, session
-from data import db_session
-from flask_restful import reqparse, abort, Api, Resource
-from data.users import User
-from funcs.user_funcs import *
+from flask import Flask, render_template
+from flask_restful import Api
 from funcs.game_funcs import *
 from funcs.different_funcs import *
-# from data import users_resources
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
@@ -161,8 +155,7 @@ def logout():
 
 
 def main():
-    app.run()
-    # serve(app, host='0.0.0.0', port=5000)
+    serve(app, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':

@@ -292,7 +292,6 @@ def get_who_win(game_id):
         return o_winner
 
     if game['count'] == 9:
-        print('draw')
         return 'draw'
 
     return 'nothing happened'
@@ -319,7 +318,6 @@ def end_game(game_id, winner, ending_seconds):
             increase_rating(get_opponent_id(game_id, winner), winner)
     elif winner == -1:
         pass
-    print('set_winner', winner)
     set_winner(winner, game_id)
     session['winner'] = winner
 
