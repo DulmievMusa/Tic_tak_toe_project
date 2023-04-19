@@ -58,6 +58,10 @@ def index():
 @app.route('/game')
 @login_required
 def game():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     try:
         session['playing'] = session.get('playing', False)
         if session['playing'] is True:
@@ -83,6 +87,10 @@ def game():
 @app.route('/game_search')
 @login_required
 def game_search():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
                      'logout_image': url_for('static', filename='new_design/logout.png')}
 
@@ -93,6 +101,10 @@ def game_search():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
                      'logout_image': url_for('static', filename='new_design/logout.png')}
     if current_user.is_authenticated:
@@ -155,6 +167,10 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
                      'logout_image': url_for('static', filename='new_design/logout.png')}
     if current_user.is_authenticated:
@@ -179,6 +195,10 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     design_old = session['design']
     session.clear()  # may be deleted
     logout_user()
@@ -188,6 +208,10 @@ def logout():
 
 @app.route('/change_design')
 def change_design_page():
+    design = session.get('design', False)
+    if not design:
+        return redirect('/')
+
     session['design'] = 'new' if session['design'] == 'old' else 'old'
     return redirect('/')
 
