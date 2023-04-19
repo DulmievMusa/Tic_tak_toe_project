@@ -179,8 +179,10 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    design_old = session['design']
     session.clear()  # may be deleted
     logout_user()
+    session['design'] = design_old
     return redirect("/")
 
 

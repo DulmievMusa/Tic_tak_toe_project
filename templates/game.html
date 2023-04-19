@@ -54,7 +54,11 @@
                                     window.location.href = '/';}
                                 document.getElementById("timer").innerHTML = '<h1 style="' + request.response.timer_style + '">Timer: ' + request.response.seconds + "</h1>"
                                 if (request.response.message !== "nothing") {
-                                document.getElementById("message_div").innerHTML = '<h1 style="text-align: center;background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 10px;">' + request.response.message + "</h1>" + '<div style="display: flex;justify-content: center;"><button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button><button style="font-family: Arial, Helvetica, sans-serif;border: 6px solid #438a4a;border-radius: 10px 10px 10px 10px;padding: 10px;margin-left: 20px;" ' + 'onclick="' + "play_again();" + '">' + '<h1>Play again!</h1></button></div>';};
+                                {% if design == 'new' %}
+                                    document.getElementById("message_div").innerHTML = '<h1 style="text-align: center;background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 10px;">' + request.response.message + "</h1>" + '<div style="display: flex;justify-content: center;"><button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button><button style="font-family: Arial, Helvetica, sans-serif;border: 6px solid #20a2b0;border-radius: 10px 10px 10px 10px;padding: 10px;margin-left: 20px;" ' + 'onclick="' + "play_again();" + '">' + '<h1>Play again!</h1></button></div>';};
+                                {% elif design == 'old' %}
+                                    document.getElementById("message_div").innerHTML = '<h1 style="text-align: center;background-color: #fff; border: 6px solid #d1b449;border-radius: 10px 10px 10px 10px;padding: 10px;">' + request.response.message + "</h1>" + '<div style="display: flex;justify-content: center;"><button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button><button style="font-family: Arial, Helvetica, sans-serif;border: 6px solid #438a4a;border-radius: 10px 10px 10px 10px;padding: 10px;margin-left: 20px;" ' + 'onclick="' + "play_again();" + '">' + '<h1>Play again!</h1></button></div>';};
+                                {% endif %}
                                 };
                         };
                         request.open('GET', '/api/do_all_game', true);
@@ -64,24 +68,45 @@
             window.load = setInterval("do_all();",500);
     </script>
 </head>
-<body style="background: url(../static/images/backgrounds/tree1.jpg);">
-<div style="margin-top: 3%;">
-<div style="display: flex;
-            justify-content: space-between;
-            width: 500px;
-            background-color: #957558;
-            border: 6px solid #ebdddd;
-            border-radius: 100px 15px 100px 15px;
-            padding-left: 3%;
-            padding-right: 3%;
-            margin-left: auto;
-            margin-right: auto;"
-        id="opponent_div">
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[0]}}</h2>
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[1]}}</h2>
-        <div id="opponent_rating" style="font-family: Arial, Helvetica, sans-serif;">
-            <h2>{{opponent[2]}}</h2></div>
-</div>
+{% if design == 'new' %}
+    <body style="background: url(../static/new_design/background.png);">
+    <div style="margin-top: 3%;">
+    <div style="display: flex;
+                justify-content: space-between;
+                width: 500px;
+                background-color: #052bc9;
+                border: 6px solid #ebdddd;
+                border-radius: 100px 15px 100px 15px;
+                padding-left: 3%;
+                padding-right: 3%;
+                margin-left: auto;
+                margin-right: auto;"
+            id="opponent_div">
+            <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[0]}}</h2>
+            <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[1]}}</h2>
+            <div id="opponent_rating" style="font-family: Arial, Helvetica, sans-serif;">
+                <h2>{{opponent[2]}}</h2></div>
+    </div>
+{% elif design == 'old' %}
+    <body style="background: url(../static/images/backgrounds/tree1.jpg);">
+    <div style="margin-top: 3%;">
+    <div style="display: flex;
+                justify-content: space-between;
+                width: 500px;
+                background-color: #957558;
+                border: 6px solid #ebdddd;
+                border-radius: 100px 15px 100px 15px;
+                padding-left: 3%;
+                padding-right: 3%;
+                margin-left: auto;
+                margin-right: auto;"
+            id="opponent_div">
+            <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[0]}}</h2>
+            <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[1]}}</h2>
+            <div id="opponent_rating" style="font-family: Arial, Helvetica, sans-serif;">
+                <h2>{{opponent[2]}}</h2></div>
+    </div>
+{% endif %}
 <div style="display: flex;
             justify-content: center;
             margin-top: 50px;
@@ -91,13 +116,34 @@
     <div id="message_div" style="font-family: Arial, Helvetica, sans-serif;
                              margin-right: 2%;"></div>
     {% if design == 'new' %}
-        <div id="table_div" style="background-color: #fff;"></div>
+        <div id="table_div" style="border: 2px solid #15cbde;border-radius: 10px 10px 10px 10px;"></div>
     {% elif design == 'old' %}
         <div id="table_div" style="background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;padding:10px;"></div>
     {% endif %}
     <div id="timer" style="font-family: Arial, Helvetica, sans-serif;
                           margin-left: 2%;"></div>
+{% if design == 'new' %}
+    </div>
+<div style="display: flex;
+            justify-content: space-between;
+            width: 500px;
+            background-color: #052bc9;
+            border: 6px solid #ebdddd;
+            border-radius: 100px 100px 100px 100px;
+            padding-left: 3%;
+            padding-right: 3%;
+            margin-left: auto;
+            margin-right: auto;"
+        id="user_div">
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[0]}}</h2>
+        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[1]}}</h2>
+        <div id="user_rating" style="font-family: Arial, Helvetica, sans-serif;">
+            <h2>{{user[2]}}</h2></div>
+
 </div>
+</div>
+{% elif design == 'old' %}
+    </div>
 <div style="display: flex;
             justify-content: space-between;
             width: 500px;
@@ -116,5 +162,6 @@
 
 </div>
 </div>
+{% endif %}
 </body>
 </html>

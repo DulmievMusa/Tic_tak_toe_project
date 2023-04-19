@@ -1,11 +1,12 @@
 {% if design == 'new' %}
 <table style="border-collapse: collapse;">
     {% for row in matrix %}
-    <tr style=" height: 160px;
-               border: 15px solid #15cbde;">
+    <tr style="height: 160px;
+               border: 14px solid #15cbde;">
         {% for elem in row %}
-        <td style="border: 15px solid #15cbde;
-                   width: 160px">
+        <td style="border: 14px solid #15cbde;
+                   width: 160px;
+                   background: url(../static/new_design/cell.png);">
             {% if elem[0] != 'space' %}
                 <button style="background: transparent;
                                border: none !important;
