@@ -2,6 +2,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
+import os
 
 SqlAlchemyBase = dec.declarative_base()
 
@@ -10,6 +11,8 @@ __factory = None
 
 def global_init(db_file):
     global __factory
+    if not os.path.exists('db'):
+        os.mkdir('db')
 
     if __factory:
         return
