@@ -26,13 +26,15 @@ def is_game_full_api():
 
 @blueprint.route('/api/get_table_matrix')
 def get_table_matrix_api():
+    design = session['design']
     game_id = session.get('game_id', '')
     if not game_id:
         return jsonify({'error': 404})
     matrix = get_matrix(game_id)
-    images_matrix = to_images_matrix(matrix)
+    images_matrix = to_images_matrix(matrix, design)
     matrix_with_indexes = add_indexes_to_matrix(images_matrix)
-    return render_template('game_table.html', matrix=matrix_with_indexes)
+    return render_template('game_table.html', matrix=matrix_with_indexes, design=design,
+                           game_board=url_for('static', filename='new_design/game_board.png'))
 
 
 # @blueprint.route('/api/is_matrix_change')

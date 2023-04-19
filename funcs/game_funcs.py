@@ -165,15 +165,21 @@ def get_opponent_id(game_id, user_id):
     return players[0]
 
 
-def to_images_matrix(matrix):
+def to_images_matrix(matrix, design):
     mat = []
     for row in matrix:
         sp = []
         for elem in row:
             if elem == '0':
-                sp.append(url_for('static', filename='images/game_sprites/circle.png'))
+                if design == 'old':
+                    sp.append(url_for('static', filename='images/game_sprites/circle.png'))
+                elif design == 'new':
+                    sp.append(url_for('static', filename='new_design/circle.png'))
             elif elem == 'X':
-                sp.append(url_for('static', filename='images/game_sprites/cross.png'))
+                if design == 'old':
+                    sp.append(url_for('static', filename='images/game_sprites/cross.png'))
+                elif design == 'new':
+                    sp.append(url_for('static', filename='new_design/cross.png'))
             else:
                 sp.append('space')
         mat.append(sp)

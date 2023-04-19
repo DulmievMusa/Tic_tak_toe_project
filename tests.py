@@ -1,7 +1,24 @@
-from funcs.game_funcs import *
-from funcs.user_funcs import *
-from data import db_session
-from flask import url_for, Flask
-from funcs.different_funcs import is_lat_letters_all
-
-print('<button style="padding: 10px;font-family: Arial, Helvetica, sans-serif;border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;" ' + 'onclick="' + "document.location='/';" + '">' + '<h1>Back</h1></button>')
+min = 30001
+min2 = 30001
+max = -30001
+max2 = -30001
+a = int(input())
+if a == 0:
+    min = 0
+    min2 = 0
+    max = 0
+    max2 = 0
+while a != 0:
+    if (a <= min):
+        min2 = min
+        min = a
+    elif a <= min2:
+        min2 = a
+    if a >= max:
+        max2 = max
+        max = a
+    elif a >= max2:
+        max2 = a
+    a = int(input())
+print(max+max2)
+print(min+min2)

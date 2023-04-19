@@ -10,9 +10,16 @@
     {% block style_block %}{% endblock %}
     <title>{% block title_block %}{% endblock %}</title>
 </head>
-<body style="background-color: #7f6546;">
-    <nav class="navbar navbar-light" style="background-color: #bd9c77;">
-        <H1>Tic Tac Toe</H1>
+
+    {% if design == 'new' %}
+    <body style="background: url(../static/new_design/background.png);">
+        <nav class="navbar navbar-light" style="background-color: #0025ca;">
+            <img src={{design_slovar['logotype']}}>
+    {% elif design == 'old' %}
+        <body style="background-color: #7f6546;">
+            <nav class="navbar navbar-light" style="background-color: #bd9c77;">
+                <H1>Tic Tac Toe</H1>
+    {% endif %}
         {% if not current_user.is_authenticated and not is_main_page%}
         <button style="border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;height: 55px;" onclick="document.location='/';"><h2>Back</h2></button>
         {% endif %}
@@ -22,7 +29,11 @@
                     <a class="navbar-brand" style="font-size: 28px;">Rating: {{ current_user.rating }}</a>
                     <a class="navbar-brand" style="font-size: 28px;">{{ current_user.country }}</a>
             </div>
-            <a class="navbar-brand" href="/logout" style="font-size: 30px;width: 125px;">Logout</a>
+                {% if design == 'new' %}
+                    <a class="navbar-brand" href="/logout"><img src={{design_slovar['logout_image']}}></a>
+                {% elif design == 'old' %}
+                    <a class="navbar-brand" href="/logout" style="font-size: 30px;width: 125px;">Logout</a>
+                {% endif %}
         {% endif %}
     </nav>
 

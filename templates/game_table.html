@@ -1,3 +1,31 @@
+{% if design == 'new' %}
+<table style="border-collapse: collapse;">
+    {% for row in matrix %}
+    <tr style=" height: 160px;
+               border: 15px solid #15cbde;">
+        {% for elem in row %}
+        <td style="border: 15px solid #15cbde;
+                   width: 160px">
+            {% if elem[0] != 'space' %}
+                <button style="background: transparent;
+                               border: none !important;
+                               width: 155px;
+                               height: 155px;"
+                        onclick="cellpressed({{elem[1]}});"><img src={{elem[0]}} style="width: 100%;
+                                                                                        height: 100%;"></button>
+            {% else %}
+                <button style="background: transparent;
+                               border: none !important;
+                               width: 155px;
+                               height: 155px;"
+                        onclick="cellpressed({{elem[1]}});"></button>
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% elif design == 'old' %}
 <table style="
               border-collapse: collapse;">
     {% for row in matrix %}
@@ -25,3 +53,5 @@
     </tr>
     {% endfor %}
 </table>
+{% endif %}
+

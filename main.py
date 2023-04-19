@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_restful import Api
 from funcs.game_funcs import *
 from funcs.different_funcs import *
@@ -30,6 +30,9 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
+    design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
+                     'logout_image': url_for('static', filename='new_design/logout.png')}
+    session['design'] = session.get('design', 'new')
     if current_user.is_authenticated:
         delete_searching_game()
         game_id = get_game_where_user_play(current_user.id)
@@ -48,7 +51,8 @@ def index():
         session['ending_seconds'] = -1
         session['old_opponent_rating'] = -1
         session['old_user_rating'] = -1
-    return render_template('main_page.html', current_user=current_user, is_main_page=True)
+    return render_template('main_page.html', current_user=current_user, is_main_page=True, design=session['design'],
+                           design_slovar=design_slovar)
 
 
 @app.route('/game')
@@ -70,7 +74,7 @@ def game():
         opponent_list = get_short_user_list(opponent_id)
         user_list = get_short_user_list(current_user.id)
         session['str_matrix'] = ''
-        return render_template('game.html', opponent=opponent_list, user=user_list)
+        return render_template('game.html', opponent=opponent_list, user=user_list, design=session['design'])
     except Exception as e:
         print(e)
         return redirect('/')
@@ -79,40 +83,58 @@ def game():
 @app.route('/game_search')
 @login_required
 def game_search():
+    design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
+                     'logout_image': url_for('static', filename='new_design/logout.png')}
+
     init_or_join_game(current_user.id)
-    return render_template('game_search_page.html')
+    return render_template('game_search_page.html', design=session['design'],
+                           design_slovar=design_slovar)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
+                     'logout_image': url_for('static', filename='new_design/logout.png')}
     if current_user.is_authenticated:
         return redirect('/')
     form = RegisterForm()
     if form.validate_on_submit():
         if len(form.password.data) < 5:
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="Password must be 5 characters or more")
+                                   form=form, message="Password must be 5 characters or more",
+                                   design=session['design'],
+                                   design_slovar=design_slovar)
         if len(form.name.data) > 12:
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="Name must be less than 12 characters")
+                                   form=form, message="Name must be less than 12 characters",
+                                   design=session['design'],
+                                   design_slovar=design_slovar)
         if len(form.country.data) > 15:
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="Country must be less than 15 characters")
+                                   form=form, message="Country must be less than 15 characters",
+                                   design=session['design'],
+                                   design_slovar=design_slovar)
         if not is_lat_letters_all(form.country.data):
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="The country must be only from Latin letters and spaces")
+                                   form=form, message="The country must be only from Latin letters and spaces",
+                                   design=session['design'],
+                                   design_slovar=design_slovar)
         if not is_lat_letters_all(form.name.data):
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="The name must be only from Latin letters and spaces")
+                                   form=form, message="The name must be only from Latin letters and spaces",
+                                   design=session['design'],
+                                   design_slovar=design_slovar)
         if form.password.data != form.password_again.data:
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="Passwords isn't same")
+                                   form=form, message="Passwords isn't same", design=session['design'],
+                                   design_slovar=design_slovar)
 
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
             db_sess.close()
             return render_template('register_form.html', title='Registration',
-                                   form=form, message="This user already exists")
+                                   form=form, message="This user already exists", design=session['design'],
+                                   design_slovar=design_slovar)
         db_sess.close()
         add_user({
                  'name': form.name.data,
@@ -127,11 +149,14 @@ def register():
         session['playing'] = False
         session['game_id'] = -1
         return redirect('/')
-    return render_template('register_form.html', title='Registration', form=form)
+    return render_template('register_form.html', title='Registration', form=form, design=session['design'],
+                           design_slovar=design_slovar)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
+                     'logout_image': url_for('static', filename='new_design/logout.png')}
     if current_user.is_authenticated:
         return redirect('/')
     form = LoginForm()
@@ -145,9 +170,10 @@ def login():
             session['game_id'] = -1
             return redirect("/")
         return render_template('login.html',
-                               message="Incorrect login or password",
-                               form=form)
-    return render_template('login.html', title='Authorization', form=form)
+                               message="Incorrect login or password", form=form, design=session['design'],
+                               design_slovar=design_slovar)
+    return render_template('login.html', title='Authorization', form=form, design=session['design'],
+                           design_slovar=design_slovar)
 
 
 @app.route('/logout')
@@ -156,6 +182,12 @@ def logout():
     session.clear()  # may be deleted
     logout_user()
     return redirect("/")
+
+
+@app.route('/change_design')
+def change_design_page():
+    session['design'] = 'new' if session['design'] == 'old' else 'old'
+    return redirect('/')
 
 
 def main():
