@@ -51,8 +51,9 @@ def index():
         session['ending_seconds'] = -1
         session['old_opponent_rating'] = -1
         session['old_user_rating'] = -1
+    top_players = get_top_players(5)
     return render_template('main_page.html', current_user=current_user, is_main_page=True, design=session['design'],
-                           design_slovar=design_slovar)
+                           design_slovar=design_slovar, top_players=top_players)
 
 
 @app.route('/game')

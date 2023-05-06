@@ -82,10 +82,17 @@
                 margin-left: auto;
                 margin-right: auto;"
             id="opponent_div">
+            {% if design == 'new' %}
+            <h2 style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">{{opponent[0]}}</h2>
+            <h2 style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">{{opponent[1]}}</h2>
+            <div id="opponent_rating" style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">
+                <h2>{{opponent[2]}}</h2></div>
+            {% elif design == 'old' %}
             <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[0]}}</h2>
             <h2 style="font-family: Arial, Helvetica, sans-serif;">{{opponent[1]}}</h2>
             <div id="opponent_rating" style="font-family: Arial, Helvetica, sans-serif;">
                 <h2>{{opponent[2]}}</h2></div>
+            {% endif %}
     </div>
 {% elif design == 'old' %}
     <body style="background: url(../static/images/backgrounds/tree1.jpg);">
@@ -135,9 +142,9 @@
             margin-left: auto;
             margin-right: auto;"
         id="user_div">
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[0]}}</h2>
-        <h2 style="font-family: Arial, Helvetica, sans-serif;">{{user[1]}}</h2>
-        <div id="user_rating" style="font-family: Arial, Helvetica, sans-serif;">
+        <h2 style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">{{user[0]}}</h2>
+        <h2 style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">{{user[1]}}</h2>
+        <div id="user_rating" style="font-family: Arial, Helvetica, sans-serif; color: #cfc4c4;">
             <h2>{{user[2]}}</h2></div>
 
 </div>

@@ -13,12 +13,23 @@
             </p>
             {% endif %}
         </div>
+        {% if top_players %}
+        <div style="background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px; position: relative;
+                    bottom: 400px; left: 600px; padding: 10px;">
+            <h3>Top of players</h3>
+        <div style="margin: auto;">
+            {% for item in top_players %}
+            <h4>{{item[0]}} {{item[1]}}</h4>
+            {% endfor %}
+        </div>
+        </div>
+        {% endif %}
     </div>
     <div style="margin-top: 10%;margin-left: 70%;margin-right: 5%;display: flex;
     flex-direction: row;">
-        <div style="background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;"><a href="https://t.me/Musa_Dulmiev">
+        <div style="background-color: #fff;border: 6px solid #fff;border-radius: 10px 10px 10px 10px;"><a href="https://t.me/TicTacToeFL">
         <img src="../static/images/buttons/telegram.png" style="width: 100px;"></a>
-        <h3 style="">My Telegram</h3>
+        <h3 style="">Game group</h3>
         </div>
         <button style="border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;height: 90px;margin-top: 15px;margin-left: 10px;" onclick="document.location='/change_design';"><h3>Change design</h3></button>
     </div>

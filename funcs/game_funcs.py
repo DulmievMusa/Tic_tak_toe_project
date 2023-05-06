@@ -447,3 +447,11 @@ def delete_searching_game():
             session.close()
             return 'success'
     return 'nothing'
+
+
+def get_top_players(amount):
+    session = db_session.create_session()
+    users = [(user.name, user.rating)for user in session.query(User).all()]
+    users = sorted(users, key=lambda x: -x[1])[:amount]
+    session.close()
+    return users

@@ -24,11 +24,19 @@
         <button style="border: 6px solid #4773a6;border-radius: 10px 10px 10px 10px;height: 55px;" onclick="document.location='/';"><h2>Back</h2></button>
         {% endif %}
         {% if current_user.is_authenticated %}
+        {% if design == 'new' %}
+            <div class="mx-auto">
+                    <a class="navbar-brand" style="font-size: 28px; color: #fff;">{{ current_user.name }}</a>
+                    <a class="navbar-brand" style="font-size: 28px; color: #fff;">Rating: {{ current_user.rating }}</a>
+                    <a class="navbar-brand" style="font-size: 28px; color: #fff;">{{ current_user.country }}</a>
+            </div>
+        {% elif design == 'old' %}
             <div class="mx-auto">
                     <a class="navbar-brand" style="font-size: 30px;">{{ current_user.name }}</a>
                     <a class="navbar-brand" style="font-size: 28px;">Rating: {{ current_user.rating }}</a>
                     <a class="navbar-brand" style="font-size: 28px;">{{ current_user.country }}</a>
             </div>
+        {% endif %}
                 {% if design == 'new' %}
                     <a class="navbar-brand" href="/logout"><img src={{design_slovar['logout_image']}}></a>
                 {% elif design == 'old' %}
