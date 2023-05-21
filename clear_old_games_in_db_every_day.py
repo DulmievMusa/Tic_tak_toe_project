@@ -10,7 +10,7 @@ def clear_games_db():
     games = session.query(Game).all()
     for game in games:
         date_delta = datetime.now() - game.last_time
-        if date_delta.days >= 2:
+        if date_delta.days >= 2 and game.winner != 0:
             session.delete(game)
     session.commit()
     session.close()
