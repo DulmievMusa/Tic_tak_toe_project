@@ -134,7 +134,7 @@ def get_how_plus(user_id, winner):
     if user_id == winner:
         return randint(19, 21)
     else:
-        return randint(-11, -9)
+        return randint(-21, -19)
 
 
 def increase_rating(user_id, winner_id):
@@ -142,8 +142,12 @@ def increase_rating(user_id, winner_id):
         return {'error': 404}
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    how_plus = get_how_plus(user_id, winner_id)
-    user.rating = max(user.rating + get_how_plus(user_id, winner_id), 0)
+    is_minus_before_plus = True if user.rating < 0 else False
+    if not is_minus_before_plus:
+        user.rating = max(user.rating + get_how_plus(user_id, winner_id), 0)
+    else:
+        how_plus = get_how_plus(user_id, winner_id)
+        user.rating += how_plus
     session.commit()
     session.close()
 
