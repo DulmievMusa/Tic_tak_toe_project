@@ -32,7 +32,7 @@ def load_user(user_id):
 def index():
     design_slovar = {'logotype': url_for('static', filename='new_design/logotype.png'),
                      'logout_image': url_for('static', filename='new_design/logout.png')}
-    session['design'] = session.get('design', 'new')
+    session['design'] = session.get('design', 'old')
     if current_user.is_authenticated:
         delete_searching_game()
         game_id = get_game_where_user_play(current_user.id)
