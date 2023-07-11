@@ -134,7 +134,7 @@ def get_how_plus(user_id, winner):
     if user_id == winner:
         return randint(19, 21)
     else:
-        return randint(-21, -19)
+        return randint(-15, -13)
 
 
 def increase_rating(user_id, winner_id):
